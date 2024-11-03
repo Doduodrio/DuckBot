@@ -90,5 +90,3 @@ def evaluate(expression: str):
       elif opr == "-":
         stack.append(b - a)
   return stack[0] if stack else "invalid expression" # you entered nothing error
-
-print(evaluate(input("Enter expression: ")))
