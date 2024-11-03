@@ -67,10 +67,10 @@ def evaluate(expression: str):
       stack.append(output.pop(0))
     elif is_operator(output[0]):
       if len(stack)==0: # no numbers left in stack
-        return "invalid expression" # no numbers error 2
+        return
       a = stack.pop()
       if len(stack)==0: # only one number left in stack
-        return "invalid expression" # no numbers error 1
+        return
       b = stack.pop()
       opr = output.pop(0)
       if opr == "^":
@@ -81,11 +81,11 @@ def evaluate(expression: str):
         try:
           stack.append(b / a)
         except ZeroDivisionError:
-          return "invalid expression" # division by zero error
+          return
       elif opr == "%":
         stack.append(b % a)
       elif opr == "+":
         stack.append(b + a)
       elif opr == "-":
         stack.append(b - a)
-  return stack[0] if stack else "invalid expression" # you entered nothing error
+  return stack[0] if stack else None
