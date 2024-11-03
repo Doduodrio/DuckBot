@@ -35,12 +35,16 @@ async def on_message(message):
     print('\n' + 'DuckBot was pinged')
   elif msg.startswith("%calc "):
     expression = ''.join(msg.strip("%calc ").split())
-    result = round(float(evaluate(expression))*1000000)/1000000
-    if result!="invalid expression":
+    try:
+      result = round(float(evaluate(expression))*1000000)/1000000
+    except:
+      result = None
+    try:
+      float(result)
       await message.channel.send(f'```{expression} = {result}```')
-    else:
-      await message.channel.send(f'```{result}```')
-    print('\n' + f'DuckBot evaluated:')
-    print('    ' + f'{expression} = {result}')
+      print('\n' + f'DuckBot evaluated:')
+      print('    ' + f'{expression} = {result}')
+    except:
+      await message.channel.send(f'```invalid expression```')
 
 client.run(TOKEN)
