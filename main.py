@@ -44,7 +44,13 @@ async def on_message(message):
       await message.channel.send(f'```{expression} = {result}```')
       print('\n' + f'DuckBot evaluated:')
       print('    ' + f'{expression} = {result}')
+    except OverflowError:
+      await message.channel.send(f'```number too large```')
+      print('\n' + f'DuckBot evaluated:')
+      print('    ' + f'{expression} = number too large')
     except:
       await message.channel.send(f'```invalid expression```')
+      print('\n' + f'DuckBot evaluated:')
+      print('    ' + f'{expression} = invalid expression')
 
 client.run(TOKEN)
