@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 import os
 import discord
 
+from calc import evaluate
+
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
 
