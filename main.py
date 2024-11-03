@@ -41,6 +41,6 @@ async def on_message(message):
     else:
       await message.channel.send(f'```{result}```')
     print('\n' + f'DuckBot evaluated:')
-    print('\t' + f'{expression} = {result}')
+    print('    ' + f'{expression} = {result}')
 
 client.run(TOKEN)
