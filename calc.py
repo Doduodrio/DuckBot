@@ -88,4 +88,9 @@ def evaluate(expression: str):
         stack.append(b + a)
       elif opr == "-":
         stack.append(b - a)
-  return stack[0] if stack else None
+  if not stack:
+    return
+  elif int(stack[0]) == stack[0]:
+    return int(stack[0])
+  else:
+    return stack[0]
