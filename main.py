@@ -30,8 +30,17 @@ async def on_message(message):
   # otherwise, react
   msg = message.content.lower() # "hElLo!" => "hello!"
 
-  if 'hello' in msg:
-    await message.channel.send('hello')
-    print('DuckBot said hello')
+  if msg == "%ping":
+    await message.channel.send('pong')
+    print('\n' + 'DuckBot was pinged')
+  elif msg.startswith("%calc "):
+    expression = ''.join(msg.strip("%calc ").split())
+    result = round(float(evaluate(expression))*1000000)/1000000
+    if result!="invalid expression":
+      await message.channel.send(f'```{expression} = {result}```')
+    else:
+      await message.channel.send(f'```{result}```')
+    print('\n' + f'DuckBot evaluated:')
+    print('\t' + f'{expression} = {result}')
 
 client.run(TOKEN)
