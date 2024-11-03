@@ -36,7 +36,7 @@ async def on_message(message):
   elif msg.startswith("%calc "):
     expression = ''.join(msg.strip("%calc ").split())
     try:
-      result = round(float(evaluate(expression))*1000000)/1000000
+      result = int(evaluate(expression)*1000000)/1000000
     except:
       result = None
     try:
