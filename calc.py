@@ -1,4 +1,4 @@
-operators = {"^": 4, "*": 3, "/": 3, "+": 2, "-": 2}
+operators = {"^": 4, "*": 3, "/": 3, "%": 3, "+": 2, "-": 2}
 
 def is_number(string):
   try:
@@ -27,17 +27,18 @@ def shunt_yard(expression: str):
   
   # strip spaces and then convert to tokens
   for i in "".join(expression.split()):
-    if is_number(i) or i == ".":
-      if len(input)>0:
-        if is_number(input[-1]) or input[-1] == ".":
-          input[-1] += i
-          continue
+    if len(input)==0 and i in "0123456789.()^*/%+-":
       input.append(i)
+    elif is_number(i) or i == ".":
+      if is_number(input[-1]) or input[-1] == ".":
+        input[-1] += i
+      else:
+        input.append(i)
     elif i in "()" or is_operator(i):
       input.append(i)
     else:
-      input.append(i)
-  print(input)
+      return []
+    print(input)
 
   for thing in input:
     if is_number(thing):
@@ -59,7 +60,7 @@ def shunt_yard(expression: str):
 def evaluate(expression: str):
   # Evaluate an expression
 
-  output = shunt_yard([x for x in expression])
+  output = shunt_yard(expression)
   stack = []
 
   while len(output) > 0:
@@ -82,10 +83,12 @@ def evaluate(expression: str):
           stack.append(b / a)
         except ZeroDivisionError:
           return "invalid expression" # division by zero error
+      elif opr == "%":
+        stack.append(b % a)
       elif opr == "+":
         stack.append(b + a)
       elif opr == "-":
         stack.append(b - a)
   return stack[0] if stack else "invalid expression" # you entered nothing error
 
-print(evaluate(shunt_yard(input("Enter expression: "))))
+print(evaluate(input("Enter expression: ")))
