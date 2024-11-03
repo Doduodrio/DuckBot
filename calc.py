@@ -38,7 +38,6 @@ def shunt_yard(expression: str):
       input.append(i)
     else:
       return []
-    print(input)
 
   for thing in input:
     if is_number(thing):
