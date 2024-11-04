@@ -59,7 +59,7 @@ async def on_message(message):
       print('    ' + f'{expression} = invalid expression')
   
   # %roll: return random numbers
-  elif msg == '%roll':
+  elif msg[0] == '%roll':
     print('\n' + f'Duckbot rolled:')
     if len(msg)==1:
       await message.channel.send('Cannot roll nothing')
