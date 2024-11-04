@@ -62,8 +62,9 @@ async def on_message(message):
   elif msg[0] in ['%roll', '%r']:
     print('\n' + f'Duckbot rolled:')
     if len(msg)==1:
-      await message.channel.send('cannot roll nothing')
-      print('    ' + 'nothing')
+      rolls = ', '.join(roll('20d600'))
+      await message.channel.send(rolls)
+      print('    ' + f'default - {rolls}')
     else:
       roll_msg = msg[1]
       rolls = roll(roll_msg)
