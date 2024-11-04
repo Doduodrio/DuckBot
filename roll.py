@@ -20,7 +20,7 @@ def roll(roll_msg: str):
     if ((num_rolls==1 and roll_msg=='') or num_rolls==int(roll_msg[0])) and num_sides==int(roll_msg[1]):
         rolls = []
         for i in range(num_rolls):
-            rolls.append(random.random(1, num_sides+1))
+            rolls.append(random.randint(1, num_sides))
         return rolls
 
     return
