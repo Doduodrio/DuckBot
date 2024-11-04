@@ -6,17 +6,21 @@ def roll(roll_msg: str):
     if 'd' not in roll_msg:
         return
 
+    # guards against asdf case
     roll_msg = roll_msg.split('d')
     try:
-        num_rolls = int(roll_msg[0])
+        num_rolls = 1
+        if roll_msg[0]!='':
+            num_rolls = int(roll_msg[0])
         num_sides = int(roll_msg[1])
     except:
         return
-    if num_rolls!=roll_msg[0] or num_sides!=roll_msg[1]:
-        return
 
-    rolls = []
-    for i in range(num_rolls):
-        rolls.append(random.random(1, num_sides+1))
-    
-    return rolls
+    # guards against d6.0 case
+    if ((num_rolls==1 and roll_msg=='') or num_rolls==int(roll_msg[0])) and num_sides==int(roll_msg[1]):
+        rolls = []
+        for i in range(num_rolls):
+            rolls.append(random.random(1, num_sides+1))
+        return rolls
+
+    return
