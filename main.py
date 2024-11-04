@@ -62,12 +62,16 @@ async def on_message(message):
   elif msg[0] == '%roll':
     print('\n' + f'Duckbot rolled:')
     if len(msg)==1:
-      await message.channel.send('Cannot roll nothing')
+      await message.channel.send('cannot roll nothing')
       print('    ' + 'nothing')
     else:
       roll_msg = msg[1]
       rolls = ', '.join(roll(roll_msg))
-      await message.channel.send(rolls)
-      print('    ' + f'{roll_msg} - {rolls}')
+      if rolls is not None:
+        await message.channel.send(rolls)
+        print('    ' + f'{roll_msg} - {rolls}')
+      else:
+        await message.channel.send('invalid parameters')
+        print('    ' + 'invalid parameters')
 
 client.run(TOKEN)
