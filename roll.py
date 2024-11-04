@@ -7,10 +7,15 @@ def roll(roll_msg: str):
         return
 
     roll_msg = roll_msg.split('d')
-    num_rolls = roll_msg[0]
-    num_sides = roll_msg[1]
-    rolls = []
+    try:
+        num_rolls = int(roll_msg[0])
+        num_sides = int(roll_msg[1])
+    except:
+        return
+    if num_rolls!=roll_msg[0] or num_sides!=roll_msg[1]:
+        return
 
+    rolls = []
     for i in range(num_rolls):
         rolls.append(random.random(1, num_sides+1))
     
