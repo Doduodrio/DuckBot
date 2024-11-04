@@ -6,6 +6,7 @@ import discord
 
 from calc import evaluate
 from roll import roll
+from pokemon import get_pkmn
 
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
@@ -46,7 +47,7 @@ async def on_message(message):
         result = int(result)
     except:
       result = None
-    print('\n' + f'DuckBot evaluated:')
+    print('\n' + 'DuckBot evaluated:')
     try:
       float(result)
       await message.channel.send(f'```{expression} = {result}```')
@@ -60,7 +61,7 @@ async def on_message(message):
   
   # %roll: return random numbers
   elif msg[0] in ['%roll', '%r']:
-    print('\n' + f'Duckbot rolled:')
+    print('\n' + 'DuckBot rolled:')
     if len(msg)==1:
       rolls = ', '.join(roll('20d600'))
       await message.channel.send(rolls)
@@ -75,5 +76,12 @@ async def on_message(message):
       else:
         await message.channel.send('invalid parameters')
         print('    ' + 'invalid parameters')
+  
+  # %stats: get stats of a pokemon
+  elif msg[0] == '%stats':
+    pkmn = ' '.join(msg[1::])
+    print('\n' + 'DuckBot got stats of:')
+    await message.channel.send(embed=get_pkmn(pkmn))
+    print('    ' + pkmn)
 
 client.run(TOKEN)
