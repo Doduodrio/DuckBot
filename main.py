@@ -66,6 +66,8 @@ async def on_message(message):
       print('    ' + 'nothing')
     else:
       roll_msg = msg[1]
-      rolls = roll(roll_msg)
+      rolls = ', '.join(roll(roll_msg))
+      await message.channel.send(rolls)
+      print('    ' + f'{roll_msg} - {rolls}')
 
 client.run(TOKEN)
