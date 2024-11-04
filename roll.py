@@ -23,6 +23,6 @@ def roll(roll_msg: str):
         rolls = []
         for i in range(num_rolls):
             rolls.append(random.randint(1, num_sides))
-        return rolls
+        return [str(rolls) for i in rolls]
 
     return
