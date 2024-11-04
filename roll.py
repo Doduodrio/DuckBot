@@ -9,9 +9,11 @@ def roll(roll_msg: str):
     # guards against asdf case
     roll_msg = roll_msg.split('d')
     try:
-        num_rolls = 1
         if roll_msg[0]!='':
             num_rolls = int(roll_msg[0])
+        else:
+            num_rolls = 1
+            roll_msg[0] = '1' # fixes bug in line 22, making d24 work
         num_sides = int(roll_msg[1])
     except:
         return
