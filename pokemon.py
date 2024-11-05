@@ -69,12 +69,16 @@ class Pokemon:
                 self.alias = a.lower()
 
 db = Database('https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=tsv&gid=2042923402', 1)
+
+# convert raw_content (list of tab-separated values) to a dict
 for i in range(1, len(db.raw_content)):
     line = db.raw_content[i].split('\t')
     if line[0] in ['Mega', 'Primal', 'Ultra']:
         db.content[f'{line[0].lower()} {line[1].lower()}'] = line
     else:
         db.content[line[1].lower()] = line
+
+# convert dict[list] to dict[Pokemon]
 for pkmn in db.content:
     mon = db.content[pkmn]
     if mon[0] in ['Mega', 'Primal', 'Ultra']:
