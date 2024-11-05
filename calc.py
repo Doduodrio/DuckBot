@@ -66,11 +66,7 @@ def evaluate(expression: str):
     if is_number(output[0]):
       stack.append(output.pop(0))
     elif is_operator(output[0]):
-      if len(stack)==0: # no numbers left in stack
-        return
       a = stack.pop()
-      if len(stack)==0: # only one number left in stack
-        return
       b = stack.pop()
       opr = output.pop(0)
       if opr == "^":
