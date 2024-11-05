@@ -45,19 +45,20 @@ async def on_message(message):
       result = evaluate(expression)
       if int(result) == result:
         result = int(result)
+    except OverflowError:
+      result = 'overflow'
     except:
       result = None
     print('\n' + 'DuckBot evaluated:')
-    try:
-      float(result)
-      await message.channel.send(f'```{expression} = {result}```')
-      print('    ' + f'{expression} = {result}')
-    except OverflowError:
-      await message.channel.send(f'```number too large```')
-      print('    ' + f'{expression} = number too large')
-    except:
+    if result is None:
       await message.channel.send(f'```invalid expression```')
       print('    ' + f'{expression} = invalid expression')
+    elif result == 'overflow':
+      await message.channel.send(f'```number too large```')
+      print('    ' + f'{expression} = number too large')
+    else:
+      await message.channel.send(f'```{expression} = {result}```')
+      print('    ' + f'{expression} = {result}')
   
   # %roll: return random numbers
   elif msg[0] in ['%roll', '%r']:
