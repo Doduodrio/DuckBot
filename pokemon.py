@@ -57,10 +57,13 @@ class Pokemon:
         self.wc = l
         self.sig = m
         self.traits = n
-        try:
-            self.alias = aliases[a.lower()]
-        except:
-            self.alias = a.lower()
+        if o != '':
+            self.alias = o.lower()
+        else:
+            try:
+                self.alias = aliases[a.lower()]
+            except:
+                self.alias = a.lower()
 
 db = Database('https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=tsv&gid=2042923402', 1)
 for i in db.raw_content:
