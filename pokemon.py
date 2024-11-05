@@ -58,7 +58,10 @@ class Pokemon:
         self.sig = m
         self.traits = n
         if o != '':
-            self.alias = o.lower()
+            try:
+                self.alias = aliases[o.lower()]
+            except:
+                self.alias = o.lower()
         else:
             try:
                 self.alias = aliases[a.lower()]
@@ -66,10 +69,8 @@ class Pokemon:
                 self.alias = a.lower()
 
 db = Database('https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=tsv&gid=2042923402', 1)
-for i in db.raw_content:
-    line = i.split('\t')
-    if line[1] == 'Name':
-        continue
+for i in range(1, len(db.raw_content)):
+    line = db.raw_content[i].split('\t')
     if line[0] in ['Mega', 'Primal', 'Ultra']:
         db.content[f'{line[0].lower()} {line[1].lower()}'] = line
     else:
