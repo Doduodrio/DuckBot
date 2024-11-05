@@ -9,7 +9,7 @@ aliases = {
     'charizard-mega-y': 'charizard-megay',
     'chien-pao': 'chienpao',
     'chi-yu': 'chiyu',
-    'darmanitan-galar-zen': 'darmanitan-galar',
+    'darmanitan-galar-zen': 'darmanitan-galarzen',
     'gourgeist-small': 'gourgeist',
     'gourgeist-average': 'gourgeist',
     'gourgeist-large': 'gourgeist',
