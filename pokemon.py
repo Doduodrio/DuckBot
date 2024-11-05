@@ -7,6 +7,8 @@ aliases = {
     'basculin-white-striped': 'basculin-whitestriped',
     'charizard-mega-x': 'charizard-megax',
     'charizard-mega-y': 'charizard-megay',
+    'chien-pao': 'chienpao',
+    'chi-yu': 'chiyu',
     'darmanitan-galar-zen': 'darmanitan-galar',
     'gourgeist-small': 'gourgeist',
     'gourgeist-average': 'gourgeist',
@@ -32,8 +34,10 @@ aliases = {
     'tauros-paldea-combat': 'tauros-paldeacombat',
     'tauros-paldea-blaze': 'tauros-paldeablaze',
     'tauros-paldea-aqua': 'tauros-paldeaaqua',
+    'ting-lu': 'tinglu',
     'toxtricity-low-key': 'toxtricity-lowkey',
     'urshifu-rapid-strike': 'urshifu-rapidstrike',
+    'wo-chien': 'wochien',
     'zygarde-10%': 'zygarde-10'
 }
 
@@ -54,18 +58,26 @@ class Pokemon:
         self.sig = m
         self.traits = n
         try:
-            self.sprite = aliases[a.lower()]
+            self.alias = aliases[a.lower()]
         except:
-            self.sprite = a.lower()
+            self.alias = a.lower()
 
 db = Database('https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=tsv&gid=2042923402', 1)
+for i in db.raw_content:
+    line = i.split('\t')
+    if line[1] == 'Name':
+        continue
+    if line[0] in ['Mega', 'Primal', 'Ultra']:
+        db.content[f'{line[0].lower()} {line[1].lower()}'] = line
+    else:
+        db.content[line[1].lower()] = line
 for pkmn in db.content:
     mon = db.content[pkmn]
     if mon[0] in ['Mega', 'Primal', 'Ultra']:
         name = f'{mon[0]} {mon[1]}'
     else:
         name = mon[1]
-    db.content[pkmn] = Pokemon(name, mon[2], mon[3], mon[4], mon[5], mon[6], mon[7], mon[8], mon[9], mon[10], mon[11], mon[12], mon[13], mon[14], mon[15])
+    db.content[name.lower()] = Pokemon(name, mon[2], mon[3], mon[4], mon[5], mon[6], mon[7], mon[8], mon[9], mon[10], mon[11], mon[12], mon[13], mon[14], mon[15])
 
 def get_pkmn(pokemon: str):
     p = db.get(pokemon)
@@ -75,7 +87,7 @@ def get_pkmn(pokemon: str):
         description = p.typing,
         timestamp = datetime.datetime.now()
     )
-    embed.set_thumbnail(url = 'https://play.pokemonshowdown.com/sprites/bw/' + p.sprite + '.png')
+    embed.set_thumbnail(url = 'https://play.pokemonshowdown.com/sprites/bw/' + p.alias + '.png')
     embed.add_field(name='Abilities', value=p.abilities)
     if p.h_ability != '':
         embed.add_field(name='Hidden Ability', value=p.h_ability)
