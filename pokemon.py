@@ -97,7 +97,7 @@ def get_pkmn(pokemon: str):
         embed.add_field(name='Hidden Ability', value=p.h_ability)
     embed.add_field(name='Stats', value=f'HP: {p.HP}\nATK: {p.ATK} | DEF: {p.DEF} | SpA: {p.SpA} | SpD: {p.SpD}\nSpeed: {p.SPE}\nSize Class: {p.sc}\nWeight Class: {p.wc}', inline=False)
     if p.sig != '':
-        embed.add_field(name='Signature Move', value=p.sig)
+        embed.add_field(name='Signature Move', value=p.sig, inline=False)
     if p.traits != '':
         embed.add_field(name='Traits', value=p.traits)
 
