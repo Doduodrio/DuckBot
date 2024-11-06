@@ -7,6 +7,7 @@ import discord
 from calc import evaluate
 from roll import roll
 from pokemon import get_pkmn
+from moves import get_move
 
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
@@ -84,5 +85,12 @@ async def on_message(message):
     print('\n' + 'DuckBot got stats of:')
     await message.channel.send(embed=get_pkmn(pkmn))
     print('    ' + pkmn)
+  
+  # %move: get move data
+  elif msg[0] == '%move':
+    move = ' '.join(msg[1::])
+    print('\n' + 'DuckBot got move data of:')
+    await message.channel.send(embed=get_move(move))
+    print('    ' + move)
 
 client.run(TOKEN)
