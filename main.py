@@ -83,14 +83,22 @@ async def on_message(message):
   elif msg[0] == '%stats':
     pkmn = ' '.join(msg[1::])
     print('\n' + 'DuckBot got stats of:')
-    await message.channel.send(embed=get_pkmn(pkmn))
-    print('    ' + pkmn)
+    try:
+      await message.channel.send(embed=get_pkmn(pkmn))
+      print('    ' + pkmn)
+    except:
+      await message.channel.send('error getting pokemon data')
+      print('    ' + pkmn + ', but there was an error')
   
   # %move: get move data
   elif msg[0] == '%move':
     move = ' '.join(msg[1::])
     print('\n' + 'DuckBot got move data of:')
-    await message.channel.send(embed=get_move(move))
-    print('    ' + move)
+    try:
+      await message.channel.send(embed=get_move(move))
+      print('    ' + move)
+    except:
+      await message.channel.send('error getting move data')
+      print('    ' + move + ', but there was an error')
 
 client.run(TOKEN)
