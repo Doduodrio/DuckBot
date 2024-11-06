@@ -50,23 +50,27 @@ z_moves = [
 ]
 
 class Move:
-    def __init__(self, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p):
-        self.name = a.strip('-')
-        self.flavor = b
-        self.description = c
-        self.type = d
-        self.category = e
-        self.target = f
-        self.BAP = g
-        self.acc = h
-        self.ENcost = i
-        self.effect_chance = j
-        self.priority = k
-        self.combo_lvl = l
-        self.contact = m
-        self.snatch = n
-        self.reflect = o
-        self.tags = p
+    def __init__(self, m, n):
+        self.name = m['● '].strip('-')
+        if '\n' in n['Type']:
+            self.flavor = n['Type'].split('\n')[0]
+            self.description = '\n'.join(n['Type'].split('\n')[1::])
+        else:
+            self.flavor = n['Type']
+            self.description = ''
+        self.type = m['Type']
+        self.category = m['Category']
+        self.target = m['Target']
+        self.BAP = m['BAP']
+        self.acc = m['Acc']
+        self.ENcost = m['En Cost']
+        self.effect_chance = m['Effect%']
+        self.priority = m['Priority']
+        self.combo_lvl = m['Combo Lv.']
+        self.contact = m['Contact?']
+        self.snatch = m['Snatch?']
+        self.reflect = m['Reflect?']
+        self.tags = m['Tags']
 
         if self.name in commands:
             self.move = 'Command'
@@ -77,30 +81,24 @@ class Move:
         else:
             self.move = 'Move'
 
-db = Database('https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=tsv&gid=1023445923', 0)
+db = Database('https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=csv&gid=1023445923')
 
-# convert raw_content (list of tab-separated values) to a dict
-for i in range(11, len(db.raw_content)):
-    line = db.raw_content[i].split('\t')
-    if i%2==0:
-        db.content[line[0][1::].lower()] = [line]
-    else:
-        db.content[line[0][1::].lower()].append(line)
-
-# convert dict[list[list]] to dict[move]
-for move in db.content:
-    mv = db.content[i]
-    db.content[move.lower()] = Move(mv[0][0], mv[1][1].split('\n')[0], mv[1][1].split('\n')[1], mv[0][1], mv[0][2], mv[0][3], mv[0][4], mv[0][5], mv[0][6], mv[0][7], mv[0][8], mv[0][9], mv[0][10], mv[0][11], mv[0][12], mv[0][13])
+# convert raw_content (list of dicts) to a dict of Move
+for i in range(0, len(db.raw_content), 2):
+    row1 = db.raw_content[i]
+    row2 = db.raw_content[i+1]
+    db.content[row1['● '].lower().strip('-')] = Move(row1, row2)
 
 def get_move(move: str):
     m = db.get(move.lower())
     embed = discord.Embed(
         color = discord.Color.dark_teal(),
-        title = m.name,
-        value = m.flavor,
+        title = f'{m.name} ({m.move})',
+        description = f'*{m.flavor}*',
         timestamp = datetime.datetime.now()
     )
-    embed.add_field(name='Description', value=m.description, inline=False)
+    if m.description != '':
+        embed.add_field(name='Description', value=m.description, inline=False)
     embed.add_field(name='Category', value=m.category)
     embed.add_field(name='Type', value=m.type)
     embed.add_field(name='Accuracy', value=m.acc)
@@ -110,6 +108,8 @@ def get_move(move: str):
     embed.add_field(name='Effect Chance', value=m.effect_chance)
     embed.add_field(name='Priority', value=m.priority)
     embed.add_field(name='Tags', value=m.tags)
-    embed.add_field(name='Additional Info', value=f'Contact: {m.contact}\nSnatch: {m.snatch}\nReflect: {m.reflect}')
+    embed.add_field(name='Contact', value=m.contact)
+    embed.add_field(name='Snatch', value=m.snatch)
+    embed.add_field(name='Reflect', value=m.reflect)
 
     return embed
