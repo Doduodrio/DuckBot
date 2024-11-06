@@ -27,7 +27,9 @@ def get_ability(ability: str):
         description = f'*{a.flavor}*',
         timestamp = datetime.datetime.now()
     )
-    if a.description != '':
+    if len(a.description) > 1024:
+        embed.add_field(name='Description', value='The description is too long to fit.')
+    elif a.description != '':
         embed.add_field(name='Description', value=a.description)
     
     return embed
