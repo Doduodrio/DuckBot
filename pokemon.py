@@ -74,7 +74,7 @@ class Pokemon:
             except:
                 self.alias = p['Name'].lower()
 
-db = Database('https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=csv&gid=2042923402', 1)
+db = Database('https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=csv&gid=2042923402')
 
 # convert raw_content (list of dicts) to a dict of Pokemon
 for p in db.raw_content:
