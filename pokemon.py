@@ -2,7 +2,7 @@ from databases import Database
 import datetime
 import discord
 
-aliases = {
+aliases = aliases = {
     'basculin-blue-striped': 'basculin-bluestriped',
     'basculin-white-striped': 'basculin-whitestriped',
     'charizard-mega-x': 'charizard-megax',
@@ -10,6 +10,7 @@ aliases = {
     'chien-pao': 'chienpao',
     'chi-yu': 'chiyu',
     'darmanitan-galar-zen': 'darmanitan-galarzen',
+    "farfetch'd": 'farfetchd',
     'gourgeist-small': 'gourgeist',
     'gourgeist-average': 'gourgeist',
     'gourgeist-large': 'gourgeist',
@@ -23,6 +24,7 @@ aliases = {
     'necrozma-dusk-mane': 'necrozma-duskmane',
     'oricorio-baile': 'oricorio',
     "oricorio-pa'u": 'oricorio-pau',
+    'porygon-z': 'porygonz',
     'pumpkaboo-small': 'pumpkaboo',
     'pumpkaboo-average': 'pumpkaboo',
     'pumpkaboo-large': 'pumpkaboo',
@@ -31,6 +33,7 @@ aliases = {
     'rotom-spin': 'rotom-fan',
     'rotom-freeze': 'rotom-frost',
     'rotom-cut': 'rotom-mow',
+    "sirfetch'd": 'sirfetchd',
     'tauros-paldea-combat': 'tauros-paldeacombat',
     'tauros-paldea-blaze': 'tauros-paldeablaze',
     'tauros-paldea-aqua': 'tauros-paldeaaqua',
