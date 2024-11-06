@@ -15,10 +15,9 @@ class Item:
 db = Database('https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=csv&gid=2023973583')
 
 # convert raw_content (list of dicts) to a dict of Item
-for i in range(24, len(db.raw_content)):
-    item = db.raw_content[i]
-    if item['Item'].startswith('-'):
-        db.content[item['Item'].lower().strip('-')] = Item(item)
+for i in db.raw_content:
+    if i['Item'].startswith('-'):
+        db.content[i['Item'].lower().strip('-')] = Item(i)
 
 def get_item(item: str):
     i = db.get(item.lower())
