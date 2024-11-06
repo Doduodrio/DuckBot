@@ -10,6 +10,7 @@ from pokemon import get_pkmn
 from moves import get_move
 from abilities import get_ability
 from items import get_item
+from conditions import get_condition
 
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
@@ -124,5 +125,16 @@ async def on_message(message):
     except:
       await message.channel.send('error getting item data')
       print('    ' + item + ', but there was an error')
+  
+  # %condition: get condition data
+  elif msg[0] == '%condition':
+    condition = ' '.join(msg[1::])
+    print('\n' + 'DuckBot got condition data of:')
+    try:
+      await message.channel.send(embed=get_condition(condition))
+      print('    ' + condition)
+    except:
+      await message.channel.send('error getting condition data')
+      print('    ' + condition + ', but there was an error')
 
 client.run(TOKEN)
