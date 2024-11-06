@@ -9,6 +9,7 @@ from roll import roll
 from pokemon import get_pkmn
 from moves import get_move
 from abilities import get_ability
+from items import get_item
 
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
@@ -112,5 +113,16 @@ async def on_message(message):
     except:
       await message.channel.send('error getting ability data')
       print('    ' + ability + ', but there was an error')
+  
+  # %item: get item data
+  elif msg[0] == '%item':
+    item = ' '.join(msg[1::])
+    print('\n' + 'DuckBot got item data of:')
+    try:
+      await message.channel.send(embed=get_item(item))
+      print('    ' + item)
+    except:
+      await message.channel.send('error getting item data')
+      print('    ' + item + ', but there was an error')
 
 client.run(TOKEN)
