@@ -3,7 +3,7 @@ import requests
 import csv
 
 class Database:
-    def __init__(self, url, key):
+    def __init__(self, url):
         self.url = url
         self.content = {}
 
