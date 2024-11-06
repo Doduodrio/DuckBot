@@ -28,7 +28,7 @@ def get_condition(condition: str):
         description = f'*{c.flavor}*',
         timestamp = datetime.datetime.now()
     )
-    embed.add_field(name='Description', value=c.description)
+    embed.add_field(name='Description', value=c.description, inline=False)
     if c.default_duration != '':
         embed.add_field(name='Default Duration', value=c.default_duration)
     
