@@ -47,7 +47,7 @@ aliases = {
 class Pokemon:
     def __init__(self, p):
         if p['ID'] in ['Mega', 'Primal', 'Ultra']:
-            self.name = f'{p['ID']} {p['Name']}'
+            self.name = f"{p['ID']} {p['Name']}"
         else:
             self.name = p['Name']
         self.typing = p['Typing']
@@ -79,7 +79,7 @@ db = Database('https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9Lu
 # convert raw_content (list of dicts) to a dict of Pokemon
 for p in db.raw_content:
     if p['ID'] in ['Mega', 'Primal', 'Ultra']:
-        db.content[f'{p['ID'].lower()} {p['Name'].lower()}'] = Pokemon(p)
+        db.content[f"{p['ID'].lower()} {p['Name'].lower()}"] = Pokemon(p)
     else:
         db.content[p['Name'].lower()] = Pokemon(p)
 
