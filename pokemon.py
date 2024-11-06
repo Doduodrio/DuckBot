@@ -2,7 +2,7 @@ from databases import Database
 import datetime
 import discord
 
-aliases = aliases = {
+aliases = {
     'basculin-blue-striped': 'basculin-bluestriped',
     'basculin-white-striped': 'basculin-whitestriped',
     'charizard-mega-x': 'charizard-megax',
@@ -45,50 +45,43 @@ aliases = aliases = {
 }
 
 class Pokemon:
-    def __init__(self, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o):
-        self.name = a
-        self.typing = b
-        self.abilities = c
-        self.h_ability = d
-        self.HP = e
-        self.ATK = f
-        self.DEF = g
-        self.SpA = h
-        self.SpD = i
-        self.SPE = j
-        self.sc = k
-        self.wc = l
-        self.sig = m
-        self.traits = n
-        if o != '':
+    def __init__(self, p):
+        if p['ID'] in ['Mega', 'Primal', 'Ultra']:
+            self.name = f'{p['ID']} {p['Name']}'
+        else:
+            self.name = p['Name']
+        self.typing = p['Typing']
+        self.abilities = p['Abilities']
+        self.h_ability = p['Hidden Ability']
+        self.HP = p['HP']
+        self.ATK = p['Atk']
+        self.DEF = p['Def']
+        self.SpA = p['SpA']
+        self.SpD = p['SpD']
+        self.SPE = p['Spe']
+        self.sc = p['Size']
+        self.wc = p['Weight']
+        self.sig = p['Signature Move or Moves']
+        self.traits = p['Traits']
+        if p['Sprite Alias'] != '':
             try:
-                self.alias = aliases[o.lower()]
+                self.alias = aliases[p['Sprite Alias'].lower()]
             except:
-                self.alias = o.lower()
+                self.alias = p['Sprite Alias'].lower()
         else:
             try:
-                self.alias = aliases[a.lower()]
+                self.alias = aliases[p['Name'].lower()]
             except:
-                self.alias = a.lower()
+                self.alias = p['Name'].lower()
 
-db = Database('https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=tsv&gid=2042923402', 1)
+db = Database('https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=csv&gid=2042923402', 1)
 
-# convert raw_content (list of tab-separated values) to a dict
-for i in range(1, len(db.raw_content)):
-    line = db.raw_content[i].split('\t')
-    if line[0] in ['Mega', 'Primal', 'Ultra']:
-        db.content[f'{line[0].lower()} {line[1].lower()}'] = line
+# convert raw_content (list of dicts) to a dict of Pokemon
+for p in db.raw_content:
+    if p['ID'] in ['Mega', 'Primal', 'Ultra']:
+        db.content[f'{p['ID'].lower()} {p['Name'].lower()}'] = Pokemon(p)
     else:
-        db.content[line[1].lower()] = line
-
-# convert dict[list] to dict[Pokemon]
-for pkmn in db.content:
-    mon = db.content[pkmn]
-    if mon[0] in ['Mega', 'Primal', 'Ultra']:
-        name = f'{mon[0]} {mon[1]}'
-    else:
-        name = mon[1]
-    db.content[name.lower()] = Pokemon(name, mon[2], mon[3], mon[4], mon[5], mon[6], mon[7], mon[8], mon[9], mon[10], mon[11], mon[12], mon[13], mon[14], mon[15])
+        db.content[p['Name'].lower()] = Pokemon(p)
 
 def get_pkmn(pokemon: str):
     p = db.get(pokemon)
