@@ -11,6 +11,7 @@ from moves import get_move
 from abilities import get_ability
 from items import get_item
 from conditions import get_condition
+from natures import get_nature
 
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
@@ -82,7 +83,7 @@ async def on_message(message):
         await message.channel.send('invalid parameters')
         print('    ' + 'invalid parameters')
   
-  # %stats: get stats of a pokemon
+  # %stats: get pokemon stats
   elif msg[0] == '%stats':
     pkmn = ' '.join(msg[1::])
     print('\n' + 'DuckBot got stats of:')
@@ -93,7 +94,7 @@ async def on_message(message):
       await message.channel.send('error getting pokemon data')
       print('    ' + pkmn + ', but there was an error')
   
-  # %move: get move data
+  # %move: get move
   elif msg[0] == '%move':
     move = ' '.join(msg[1::])
     print('\n' + 'DuckBot got move data of:')
@@ -104,7 +105,7 @@ async def on_message(message):
       await message.channel.send('error getting move data')
       print('    ' + move + ', but there was an error')
   
-  # %ability: get ability data
+  # %ability: get ability
   elif msg[0] == '%ability':
     ability = ' '.join(msg[1::])
     print('\n' + 'DuckBot got ability data of:')
@@ -115,7 +116,7 @@ async def on_message(message):
       await message.channel.send('error getting ability data')
       print('    ' + ability + ', but there was an error')
   
-  # %item: get item data
+  # %item: get item
   elif msg[0] == '%item':
     item = ' '.join(msg[1::])
     print('\n' + 'DuckBot got item data of:')
@@ -126,7 +127,7 @@ async def on_message(message):
       await message.channel.send('error getting item data')
       print('    ' + item + ', but there was an error')
   
-  # %condition: get condition data
+  # %condition: get condition
   elif msg[0] == '%condition':
     condition = ' '.join(msg[1::])
     print('\n' + 'DuckBot got condition data of:')
@@ -136,5 +137,16 @@ async def on_message(message):
     except:
       await message.channel.send('error getting condition data')
       print('    ' + condition + ', but there was an error')
+  
+  # %nature: get nature
+  elif msg[0] == '%nature':
+    nature = ' '.join(msg[1::])
+    print('\n' + 'DuckBot got nature data of:')
+    try:
+      await message.channel.send(embed=get_nature(nature))
+      print('    ' + nature)
+    except:
+      await message.channel.send('error getting nature data')
+      print('    ' + nature + ', but there was an error')
 
 client.run(TOKEN)
