@@ -9,7 +9,7 @@ class Nature:
 
 db = Database('https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=csv&gid=54976138')
 
-# convert raw_content (list of dicts) to a sict of Constelation
+# convert raw_content (list of dicts) to a dict of Nature
 for i in range(2, len(db.raw_content)):
     n = db.raw_content[i]
     db.content[n['Nature'].lower()] = Nature(n)
