@@ -12,6 +12,7 @@ from abilities import get_ability
 from items import get_item
 from conditions import get_condition
 from natures import get_nature
+from type_matchups import get_offensive_matchup, get_defensive_matchup
 
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
@@ -148,5 +149,18 @@ async def on_message(message):
     except:
       await message.channel.send('error getting nature data')
       print('    ' + nature + ', but there was an error')
+  
+  # %weak: get type matchup of a list of types
+  elif msg[0] in ['%weak', '%type']:
+    types = ' '.join(msg[1::])
+    print('\n' + 'DuckBot got type data of:')
+    try:
+      types = [i.lower().strip() for i in types.split(',')]
+      await message.channel.send(embed=get_offensive_matchup(types))
+      await message.channel.send(embed=get_defensive_matchup(types))
+      print('    ' + ', '.join(types))
+    except:
+      await message.channel.send('error getting type data')
+      print('    ' + ', '.join(types) + ', but there was an error')
 
 client.run(TOKEN)
