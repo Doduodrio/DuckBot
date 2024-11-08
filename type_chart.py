@@ -61,24 +61,60 @@ def defensive_matchup(types):
                 break
     return output
 
-def get_matchup(types):
+def get_offensive_matchup(types):
     a = offensive_matchup(types)
-    b = defensive_matchup(types)
-    offensive = [[], [], []]
-    defensive = [[], [], []]
-    for t in TYPES: # resume work on this for loop
-        if offensive[t] and offensive[t] < offensive[0]:
-            offensive[1].append(t)
-        else:
-            offensive[2].append(t)
+
+    offensive = {'Super Effective':  [], 'Not Very Effective': [], 'Ineffective': []}
+    for t in TYPES:
+        if a[t] is None:
+            offensive['Ineffective'].append(t.capitalize())
+        elif a[t] == -1:
+            offensive['Not Very Effective'].append(t.capitalize())
+        elif a[t] < -1:
+            offensive['Not Very Effective'].append(f'**{t.capitalize()}**')
+        elif a[t] == 1:
+            offensive['Super Effective'].append(t.capitalize())
+        elif a[t] > 1:
+            offensive['Super Effective'].append(f'**{t.capitalize()}**')
+
     embed = discord.Embed(
         color = discord.Color.dark_teal(),
         title = 'Offensive',
         description = '/'.join(types),
         timestamp = datetime.datetime.now()
     )
-    embed.add_field(name='Super Effective', value=', '.join(se), inline=False)
-    embed.add_field(name='Not Very Effective', value=', '.join(nve), inline=False)
-    embed.add_field(name='Ineffective', value=', '.join(ineffective), inline=False)
+    embed.add_field(name='Super Effective', value=', '.join(offensive['Super Effective']), inline=False)
+    embed.add_field(name='Not Very Effective', value=', '.join(offensive['Not Very Effective']), inline=False)
+    embed.add_field(name='Ineffective', value=', '.join(offensive['Ineffective']), inline=False)
+
+    return embed
+
+def get_defensive_matchup(types):
+    b = defensive_matchup(types)
+
+    defensive = {'Weaknesses': [], 'Resistances': [], 'Immunities': []}
+    for t in TYPES:
+        if b[t] is None:
+            defensive['Immunities'].append(t.capitalize())
+        elif b[t] == -1:
+            defensive['Resistances'].append(t.capitalize())
+        elif b[t] < -1:
+            defensive['Resistances'].append(f'**{t.capitalize()}**')
+        elif b[t] == 1:
+            defensive['Weaknesses'].append(t.capitalize())
+        elif b[t] > 1:
+            defensive['Weaknesses'].append(f'**{t.capitalize()}**')
+
+    embed = discord.Embed(
+        color = discord.Color.dark_teal(),
+        title = 'Defensive',
+        description = '/'.join(types),
+        timestamp = datetime.datetime.now()
+    )
+    embed.add_field(name='Weaknesses', value=', '.join(defensive['Weaknesses']), inline=False)
+    embed.add_field(name='Resistances', value=', '.join(defensive['Resistances']), inline=False)
+    embed.add_field(name='Immunities', value=', '.join(defensive['Immunities']), inline=False)
+
+    return embed
 
 # note to future self: also add functionality to look up a pokemon's type
