@@ -83,6 +83,7 @@ def get_offensive_matchup(types):
         description = '/'.join(types),
         timestamp = datetime.datetime.now()
     )
+    embed.set_thumbnail(url='https://play.pokemonshowdown.com/sprites/types/' + types[0] + '.png')
     embed.add_field(name='Super Effective', value=', '.join(offensive['Super Effective']), inline=False)
     embed.add_field(name='Not Very Effective', value=', '.join(offensive['Not Very Effective']), inline=False)
     embed.add_field(name='Ineffective', value=', '.join(offensive['Ineffective']), inline=False)
@@ -111,6 +112,7 @@ def get_defensive_matchup(types):
         description = '/'.join(types),
         timestamp = datetime.datetime.now()
     )
+    embed.set_thumbnail(url='https://play.pokemonshowdown.com/sprites/types/' + types[0] + '.png')
     embed.add_field(name='Weaknesses', value=', '.join(defensive['Weaknesses']), inline=False)
     embed.add_field(name='Resistances', value=', '.join(defensive['Resistances']), inline=False)
     embed.add_field(name='Immunities', value=', '.join(defensive['Immunities']), inline=False)
