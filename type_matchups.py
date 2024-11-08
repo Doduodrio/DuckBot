@@ -62,20 +62,20 @@ def defensive_matchup(types):
     return output
 
 def get_offensive_matchup(types):
-    a = offensive_matchup(types)
+    a = offensive_matchup([i.lower() for i in types])
 
     offensive = {'Super Effective':  [], 'Not Very Effective': [], 'Ineffective': []}
     for t in TYPES:
         if a[t] is None:
-            offensive['Ineffective'].append(t.capitalize())
+            offensive['Ineffective'].append(t)
         elif a[t] == -1:
-            offensive['Not Very Effective'].append(t.capitalize())
+            offensive['Not Very Effective'].append(t)
         elif a[t] < -1:
-            offensive['Not Very Effective'].append(f'**{t.capitalize()}**')
+            offensive['Not Very Effective'].append(f'**{t}**')
         elif a[t] == 1:
-            offensive['Super Effective'].append(t.capitalize())
+            offensive['Super Effective'].append(t)
         elif a[t] > 1:
-            offensive['Super Effective'].append(f'**{t.capitalize()}**')
+            offensive['Super Effective'].append(f'**{t}**')
 
     embed = discord.Embed(
         color = discord.Color.dark_teal(),
@@ -84,27 +84,30 @@ def get_offensive_matchup(types):
         timestamp = datetime.datetime.now()
     )
     embed.set_thumbnail(url='https://play.pokemonshowdown.com/sprites/types/' + types[0] + '.png')
-    embed.add_field(name='Super Effective', value=', '.join(offensive['Super Effective']), inline=False)
-    embed.add_field(name='Not Very Effective', value=', '.join(offensive['Not Very Effective']), inline=False)
-    embed.add_field(name='Ineffective', value=', '.join(offensive['Ineffective']), inline=False)
+    if len(offensive['Super Effective']) > 0:
+        embed.add_field(name='Super Effective', value=', '.join(offensive['Super Effective']), inline=False)
+    if len(offensive['Not Very Effective']) > 0:
+        embed.add_field(name='Not Very Effective', value=', '.join(offensive['Not Very Effective']), inline=False)
+    if len(offensive['Ineffective']) > 0:
+        embed.add_field(name='Ineffective', value=', '.join(offensive['Ineffective']), inline=False)
 
     return embed
 
 def get_defensive_matchup(types):
-    b = defensive_matchup(types)
+    b = defensive_matchup([i.lower() for i in types])
 
     defensive = {'Weaknesses': [], 'Resistances': [], 'Immunities': []}
     for t in TYPES:
         if b[t] is None:
-            defensive['Immunities'].append(t.capitalize())
+            defensive['Immunities'].append(t)
         elif b[t] == -1:
-            defensive['Resistances'].append(t.capitalize())
+            defensive['Resistances'].append(t)
         elif b[t] < -1:
-            defensive['Resistances'].append(f'**{t.capitalize()}**')
+            defensive['Resistances'].append(f'**{t}**')
         elif b[t] == 1:
-            defensive['Weaknesses'].append(t.capitalize())
+            defensive['Weaknesses'].append(t)
         elif b[t] > 1:
-            defensive['Weaknesses'].append(f'**{t.capitalize()}**')
+            defensive['Weaknesses'].append(f'**{t}**')
 
     embed = discord.Embed(
         color = discord.Color.dark_teal(),
@@ -113,9 +116,12 @@ def get_defensive_matchup(types):
         timestamp = datetime.datetime.now()
     )
     embed.set_thumbnail(url='https://play.pokemonshowdown.com/sprites/types/' + types[0] + '.png')
-    embed.add_field(name='Weaknesses', value=', '.join(defensive['Weaknesses']), inline=False)
-    embed.add_field(name='Resistances', value=', '.join(defensive['Resistances']), inline=False)
-    embed.add_field(name='Immunities', value=', '.join(defensive['Immunities']), inline=False)
+    if len(defensive['Weaknesses']) > 0:
+        embed.add_field(name='Weaknesses', value=', '.join(defensive['Weaknesses']), inline=False)
+    if len(defensive['Resistances']) > 0:
+        embed.add_field(name='Resistances', value=', '.join(defensive['Resistances']), inline=False)
+    if len(defensive['Immunities']) > 0:
+        embed.add_field(name='Immunities', value=', '.join(defensive['Immunities']), inline=False)
 
     return embed
 

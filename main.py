@@ -155,7 +155,7 @@ async def on_message(message):
     types = ' '.join(msg[1::])
     print('\n' + 'DuckBot got type data of:')
     try:
-      types = [i.lower().strip() for i in types.split(',')]
+      types = [i.strip().capitalize() for i in types.split(',')]
       await message.channel.send(embed=get_offensive_matchup(types))
       await message.channel.send(embed=get_defensive_matchup(types))
       print('    ' + ', '.join(types))
