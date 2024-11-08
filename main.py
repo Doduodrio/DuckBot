@@ -150,12 +150,12 @@ async def on_message(message):
       await message.channel.send('error getting nature data')
       print('    ' + nature + ', but there was an error')
   
-  # %weak: get type matchup of a list of types
-  elif msg[0] in ['%weak', '%type']:
+  # %type: get type matchup of a list of types
+  elif msg[0] in ['%type', '%types']:
     types = ' '.join(msg[1::])
     print('\n' + 'DuckBot got type data of:')
     try:
-      types = [i.strip().capitalize() for i in types.split(',')]
+      types = [i.strip() for i in types.split(',')]
       await message.channel.send(embed=get_offensive_matchup(types))
       await message.channel.send(embed=get_defensive_matchup(types))
       print('    ' + ', '.join(types))
