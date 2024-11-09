@@ -52,11 +52,11 @@ def defensive_matchup(types):
             m = matchup(type1, type2)
             try:
                 if m == 1:
-                    output[type2] -= 1
+                    output[type1] -= 1
                 elif m == 2:
-                    output[type2] += 1
+                    output[type1] += 1
                 elif m == 3:
-                    output[type2] = None
+                    output[type1] = None
             except:
                 break
     return output
