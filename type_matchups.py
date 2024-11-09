@@ -85,12 +85,15 @@ def get_offensive_matchup(types):
         timestamp = datetime.datetime.now()
     )
     embed.set_thumbnail(url='https://play.pokemonshowdown.com/sprites/types/' + types[0].capitalize() + '.png')
-    if len(offensive['Super Effective']) > 0:
-        embed.add_field(name='Super Effective', value=', '.join(offensive['Super Effective']), inline=False)
-    if len(offensive['Not Very Effective']) > 0:
-        embed.add_field(name='Not Very Effective', value=', '.join(offensive['Not Very Effective']), inline=False)
-    if len(offensive['Ineffective']) > 0:
-        embed.add_field(name='Ineffective', value=', '.join(offensive['Ineffective']), inline=False)
+    if offensive['Super Effective'] == []:
+        offensive['SuperEffective'].append('None')
+    if offensive['Not Very Effective'] == []:
+        offensive['Not Very Effective'].append('None')
+    if offensive['Ineffective'] == []:
+        offensive['Ineffective'].append('None')
+    embed.add_field(name='Super Effective', value=', '.join(offensive['Super Effective']), inline=False)
+    embed.add_field(name='Not Very Effective', value=', '.join(offensive['Not Very Effective']), inline=False)
+    embed.add_field(name='Ineffective', value=', '.join(offensive['Ineffective']), inline=False)
 
     return embed
 
@@ -118,12 +121,15 @@ def get_defensive_matchup(types):
         timestamp = datetime.datetime.now()
     )
     embed.set_thumbnail(url='https://play.pokemonshowdown.com/sprites/types/' + types[0].capitalize() + '.png')
-    if len(defensive['Weaknesses']) > 0:
-        embed.add_field(name='Weaknesses', value=', '.join(defensive['Weaknesses']), inline=False)
-    if len(defensive['Resistances']) > 0:
-        embed.add_field(name='Resistances', value=', '.join(defensive['Resistances']), inline=False)
-    if len(defensive['Immunities']) > 0:
-        embed.add_field(name='Immunities', value=', '.join(defensive['Immunities']), inline=False)
+    if defensive['Weaknesses'] == []:
+        defensive['Weaknesses'].append('None')
+    if defensive['Resistances'] == []:
+        defensive['Resistances'].append('None')
+    if defensive['Immunities'] == []:
+        defensive['Immunities'].append('None')
+    embed.add_field(name='Weaknesses', value=', '.join(defensive['Weaknesses']), inline=False)
+    embed.add_field(name='Resistances', value=', '.join(defensive['Resistances']), inline=False)
+    embed.add_field(name='Immunities', value=', '.join(defensive['Immunities']), inline=False)
 
     return embed
 
