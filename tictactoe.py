@@ -11,7 +11,7 @@ def get_embed():
         description = f'The number is {data[page]}',
         timestamp = datetime.datetime.now()
     )
-    embed.add_field(name='', value=f'Page {page} of {len(data)}')
+    embed.add_field(name='', value=f'Page {page+1} of {len(data)}')
 
     return embed
 
@@ -21,16 +21,14 @@ class TicTacToe(discord.ui.View):
 
     @discord.ui.button(style = discord.ButtonStyle.primary, label = '<')
     async def left_button(self, i: discord.Interaction, b: discord.ui.Button):
+        global page
         page -= 1
-        if page == 0:
-            b.disabled = True # why must i use self.left_button and not just left_button defined in the class body?
         await self.update()
     
     @discord.ui.button(style = discord.ButtonStyle.primary, label = '>')
-    async def right_button(self, i: discord.Interaction, b: discord.ui.Button): # note to future self: figure out how to attach these functions to the button objects
+    async def right_button(self, i: discord.Interaction, b: discord.ui.Button):
+        global page
         page += 1
-        if page == len(data)-1:
-            b.disabled = True
         await self.update()
     
     async def update(self):
