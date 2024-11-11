@@ -13,7 +13,7 @@ def make_move(board, symbol, move):
   # board is the current board state
   # symbol is the symbol to be placed
   # move is index of the target space
-  return [*board[0:move], symbol, *board[move::]]
+  return [*board[0:move], symbol, *board[move+1::]]
 
 def win(b):
     # returns winner if there is one, else returns None
