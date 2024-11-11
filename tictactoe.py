@@ -4,6 +4,7 @@ import time
 
 class GoFirst(discord.ui.View):
     def __init__(self):
+        super().__init__()
         self.player_starts = None
     
     def get_embed(self):
@@ -15,7 +16,7 @@ class GoFirst(discord.ui.View):
         )
 
     async def send(self, message: discord.Message):
-        self.message = await message.channel.send(embed=self.get_embed(), view=self)
+        return await message.channel.send(embed=self.get_embed(), view=self)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, label='Yes')
     async def yes(self, i: discord.Interaction, b: discord.ui.Button):
@@ -98,8 +99,8 @@ class TicTacToe(discord.ui.View):
         super().__init__()
         self.board = [blank for i in range(9)]
         self.player_starts = player_starts
-        self.player = X if player_starts else O
-        self.bot = O if player_starts else X
+        self.player = X
+        self.bot = O
         self.winner = None
 
     def get_embed(self, text=''):
@@ -121,56 +122,62 @@ class TicTacToe(discord.ui.View):
             embed.add_field(name='', value=text)
 
         return embed
+    
+    async def update(self, text):
+        print('    ' + 'Updating board...')
+        await self.message.edit(embed=self.get_embed(text), view=self)
 
     async def make_board(self, message: discord.Message):
-        self.message = await message.channel.edit(embed=self.get_embed("Player's turn"), view=self)
-        if not self.player_starts:
+        if self.player_starts:
+            self.message = await message.edit(embed=self.get_embed("Player's turn"), view=self)
+        else:
+            self.message = await message.edit(embed=self.get_embed('Bot is thinking...'), view=self)
             await self.bot_move()
 
     @discord.ui.button(style=discord.ButtonStyle.primary, label='A1', row=0)
     async def a1(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        await self.update(0)
+        await self.player_move(0)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, label='A2', row=0)
     async def a2(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        await self.update(1)
+        await self.player_move(1)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, label='A3', row=0)
     async def a3(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        await self.update(2)
+        await self.player_move(2)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, label='B1', row=1)
     async def b1(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        await self.update(3)
+        await self.player_move(3)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, label='B2', row=1)
     async def b2(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        await self.update(4)
+        await self.player_move(4)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, label='B3', row=1)
     async def b3(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        await self.update(5)
+        await self.player_move(5)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, label='C1', row=2)
     async def c1(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        await self.update(6)
+        await self.player_move(6)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, label='C2', row=2)
     async def c2(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        await self.update(7)
+        await self.player_move(7)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, label='C3', row=2)
     async def c3(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        await self.update(8)
+        await self.player_move(8)
     
     def disable_button(self, index):
         # disables the specified button
@@ -195,45 +202,40 @@ class TicTacToe(discord.ui.View):
             print('        ' + f'Player placed piece on {player_choice}')
             self.disable_button(player_choice)
         else:
-            await self.message.channel.send('Spot already taken. Please pick again.', ephemeral=True) # should be impossible to occur, but just in case
+            await self.update('Spot already taken. Please pick again.') # should be impossible, but just in case
             print('        ' + f'Player could not place piece on {player_choice} because it was already taken')
-        
+
         # check if player won
         if win(self.board) is None:
-            await self.message.edit(embed=self.get_embed('DuckBot is thinking...'), view=self)
+            await self.update('DuckBot is thinking...')
             print('    ' + "It is now DuckBot's turn")
+            await self.bot_move()
         else:
             self.winner = win(self.board)
-            print('        ' + 'Winner detected, so calling game_end()')
+            print('        ' + 'End of game detected, so calling game_end()')
             await self.game_end()
     
     async def bot_move(self):
+        time.sleep(1)
+        
         available = [i for i in range(9) if self.board[i]==blank]
 
         # generate and update board with bot's move
-        scores = [minimax(self.board, self.bot, self.player, i, 0, True) for i in available]
-        bot_choice = available[scores.index(min(scores))] # pick branch that results in min score for player
+        if self.board == [blank for i in range(9)]:
+            bot_choice = 4
+        else:
+            scores = [minimax(self.board, self.bot, self.player, i, 0, True) for i in available]
+            bot_choice = available[scores.index(min(scores))] # pick branch that results in min score for player
+            print('        ' + f'Scores: {[(available[i], scores[i]) for i in range(len(available))]}')
         self.board = make_move(self.board, self.bot, bot_choice)
-        print('        ' + f'Scores: {[(available[i], scores[i]) for i in range(len(available))]}')
         print('        ' + f'DuckBot placed piece on {bot_choice}')
-        time.sleep(1)
         self.disable_button(bot_choice)
-        
+
         # check if bot won
         if win(self.board) is None:
-            await self.message.edit(embed=self.get_embed("Player's turn"), view=self)
+            await self.update("Player's turn")
             print('    ' + "It is now Player's turn")
         else:
             self.winner = win(self.board)
-            print('        ' + 'Winner detected, so calling game_end()')
-            await self.game_end()  
-    
-    async def update(self, player_choice):
-        print('    ' + 'Updating board...')
-
-        await self.player_move(player_choice)
-        
-        if self.winner: # does not keep going if player won (should be impossible, but just in case)
-            return
-        
-        await self.bot_move()
+            print('        ' + 'End of game detected, so calling game_end()')
+            await self.game_end()
