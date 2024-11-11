@@ -167,6 +167,6 @@ async def on_message(message):
   # %tictactoe: start a game of tic tac toe
   elif msg[0] in ['%tictactoe', '%ttt']:
     game = TicTacToe()
-    game.send()
+    game.send(message)
 
 client.run(TOKEN)
