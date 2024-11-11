@@ -1,7 +1,8 @@
 import datetime
 import discord
+import time
 
-X = ':regional_indicator_x:' # or whatever the code is for discord emojis
+X = ':regional_indicator_x:' # note to future self: or whatever the code is for discord emojis
 O = ':o2:'
 blank = ':black_large_square:'
 player, bot = X, O
@@ -18,7 +19,7 @@ def win(b):
     # returns winner if there is one, else returns None
     # b is the current board state because i don't want to type board[] a billion times
     if blank not in b:
-        return
+        return 'tie'
     win_states = [
         (0, 1, 2), (3, 4, 5), (6, 7, 8), # rows
         (0, 3, 6), (1, 4, 7), (2, 5, 8), # columns
@@ -43,13 +44,13 @@ def minimax(board, a, b, target, depth, maximizing):
     winner = win(new_board)
     if depth == 99 or (winner is not None):
         if winner == player:
-            return 10 - depth
+            return -10 + depth # -10 pts with depth bonus (minimizing player)
         elif winner == bot:
-            return depth - 10
+            return 10 - depth # 10 pts with depth penalty (maximizing bot)
         else:
             return 0
     
-    available = [i for i in range(9) if new_board[i] == 0]
+    available = [i for i in range(9) if new_board[i]==0]
     if maximizing:
         value = -999
         for position in available:
@@ -64,9 +65,11 @@ def minimax(board, a, b, target, depth, maximizing):
 class TicTacToe(discord.ui.View):
     def __init__(self):
         self.board = [0 for i in range(9)]
+        self.player = X
+        self.bot = O
         self.winner = None
 
-    def get_embed(self):
+    def get_embed(self, text=''):
         embed = discord.Embed(
             color = discord.Color.dark_teal(),
             title = 'Tic Tac Toe',
@@ -79,65 +82,98 @@ class TicTacToe(discord.ui.View):
                 self.description += '\n'
         if self.winner:
             embed.add_field(name='', value=f'{self.winner} was the winner!')
+        else:
+            embed.add_field(name='', value=text)
 
         return embed
 
-    async def send(self, message: discord.Message): # player starts by default, but add option to pick starting player later
-        self.message = await message.channel.send(embed=self.get_embed(), view=self)
+    async def send(self, message: discord.Message): # note to future self: player starts by default, but add option to pick starting player later
+        self.message = await message.channel.send(embed=self.get_embed("Player's turn"), view=self)
 
     @discord.ui.button(style=discord.ButtonStyle.primary, row=0)
     async def a1(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        b.disabled = True
         await self.update(0)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, row=0)
     async def a2(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        b.disabled = True
         await self.update(1)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, row=0)
     async def a3(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        b.disabled = True
         await self.update(2)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, row=1)
     async def b1(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        b.disabled = True
         await self.update(3)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, row=1)
     async def b2(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        b.disabled = True
         await self.update(4)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, row=1)
     async def b3(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        b.disabled = True
         await self.update(5)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, row=2)
     async def c1(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        b.disabled = True
         await self.update(6)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, row=2)
     async def c2(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        b.disabled = True
         await self.update(7)
     
     @discord.ui.button(style=discord.ButtonStyle.primary, row=2)
     async def c3(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
-        b.disabled = True
         await self.update(8)
     
+    def disable_button(self, index):
+        # disables the specified button
+        for i in len(self.children):
+            if i==index:
+                i.disabled = True
+                return
+    
+    async def game_end(self):
+        # displays winner and ends interaction
+        await self.message.channel.edit(embed=self.get_embed(), view=self)
+        self.stop()
+    
     async def update(self, player_choice):
-        await self.message.edit(embed=self.get_embed(), view=self)
+        available = [i for i in range(9) if self.board[i]==blank]
+
+        # update board with player's move
+        if player_choice in available:
+            self.board = make_move(self.board, self.player, player_choice)
+            self.disable_button(player_choice)
+        else:
+            await self.message.channel.send('Spot already taken. Please pick again.', ephemeral=True)
+        
+        # check if player won
+        if win(self.board) is None:
+            await self.message.edit(embed=self.get_embed('Bot is thinking...'), view=self)
+        else:
+            self.winner = self.player
+            await self.game_end()
+
+        # generate and update board with bot's move
+        scores = [minimax(self.board, self.bot, self.player, i, 0, True) for i in available]
+        bot_choice = available[scores.index(max(scores))]
+        self.board = make_move(self.board, self.bot, bot_choice)
+        # time.sleep(2)
+        self.disable_button(bot_choice)
+        
+        # check if bot won
+        if win(self.board) is None:
+            await self.message.edit(embed=self.get_embed("Player's turn"), view=self)
+        else:
+            self.winner = self.bot
+            await self.game_end()
