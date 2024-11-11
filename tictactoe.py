@@ -16,30 +16,22 @@ def get_embed():
     return embed
 
 class MyView(discord.ui.View):
-    def __init__(self):
-        self.left_button = discord.ui.Button(
-            style = discord.ButtonStyle.primary,
-            label = '<'
-        )
-        self.right_button = discord.ui.Button(
-            style = discord.ButtonStyle.primary,
-            label = '>'
-        )
-
     async def send(self, message: discord.Message):
         self.message = await message.channel.send(embed=get_embed(), view=self)
     
     async def update(self):
         await self.message.edit(embed=get_embed(), view=self)
 
-    async def left_button_press(self):
+    @discord.ui.button(style = discord.ButtonStyle.primary, label = '<')
+    async def left_button(self, i: discord.Interaction, b: discord.ui.Button):
         page -= 1
         if page == 0:
-            self.left_button.disabled = True # why must i use self.left_button and not just left_button defined in the class body?
+            b.disabled = True # why must i use self.left_button and not just left_button defined in the class body?
         await self.update()
     
-    async def right_button_press(self): # note to future self: figure out how to attach these functions to the button objects
+    @discord.ui.button(style = discord.ButtonStyle.primary, label = '>')
+    async def right_button(self, i: discord.Interaction, b: discord.ui.Button): # note to future self: figure out how to attach these functions to the button objects
         page += 1
         if page == len(data)-1:
-            self.right_button.disabled = True
+            b.disabled = True
         await self.update()
