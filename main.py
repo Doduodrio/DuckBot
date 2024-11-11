@@ -171,11 +171,11 @@ async def on_message(message):
   
   # %tictactoe: start a game of tic tac toe
   elif msg[0] in ['%tictactoe', '%ttt']:
+    print('\n' + 'DuckBot started a game of Tic Tac Toe')
     menu = GoFirst()
     game_message = await menu.send(message)
     await menu.wait()
     game = TicTacToe(menu.player_starts)
-    game.make_board(game_message)
-    print('\n' + 'DuckBot started a game of Tic Tac Toe')
+    await game.make_board(game_message)
 
 client.run(TOKEN)
