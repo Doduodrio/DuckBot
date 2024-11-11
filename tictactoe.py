@@ -45,9 +45,9 @@ def minimax(board, a, b, target, depth, maximizing):
     winner = win(new_board)
     if depth == deepest or (winner is not None):
         if winner == player:
-            return -10 + depth # -10 pts with depth bonus (minimizing player)
+            return 10 - depth # 10 pts with depth penalty (maximizing player)
         elif winner == bot:
-            return 10 - depth # 10 pts with depth penalty (maximizing bot)
+            return -10 + depth # -10 pts with depth bonus (minimizing bot)
         else:
             return 0
     
@@ -182,7 +182,7 @@ class TicTacToe(discord.ui.View):
         
         # generate and update board with bot's move
         scores = [minimax(self.board, self.bot, self.player, i, 0, True) for i in available]
-        bot_choice = available[scores.index(max(scores))]
+        bot_choice = available[scores.index(min(scores))] # pick branch that results in min score for player
         self.board = make_move(self.board, self.bot, bot_choice)
         print('    ' + f'Scores: {[(available[i], scores[i]) for i in range(len(available))]}')
         print('    ' + f'DuckBot placed piece on {bot_choice}')
