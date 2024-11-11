@@ -18,16 +18,17 @@ def make_move(board, symbol, move):
 def win(b):
     # returns winner if there is one, else returns None
     # b is the current board state because i don't want to type board[] a billion times
-    if blank not in b:
-        return 'tie'
     win_states = [
         (0, 1, 2), (3, 4, 5), (6, 7, 8), # rows
         (0, 3, 6), (1, 4, 7), (2, 5, 8), # columns
         (0, 4, 8), (2, 4, 6) # diagonals
     ]
     for i in win_states:
-        if b[i[0]]!=blank and b[i[0]]==b[i[1]] and b[i[1]]==b[i[2]]:
-            return b[i[0]]
+        if b[i[0]] != blank:
+            if b[i[0]]==b[i[1]] and b[i[1]]==b[i[2]]:
+                return b[i[0]]
+    if blank not in b:
+        return 'tie'
     return
 
 def minimax(board, a, b, target, depth, maximizing):
@@ -42,7 +43,7 @@ def minimax(board, a, b, target, depth, maximizing):
     new_board = make_move(board, a, target)
 
     winner = win(new_board)
-    if depth == 99 or (winner is not None):
+    if depth == deepest or (winner is not None):
         if winner == player:
             return -10 + depth # -10 pts with depth bonus (minimizing player)
         elif winner == bot:
@@ -50,7 +51,7 @@ def minimax(board, a, b, target, depth, maximizing):
         else:
             return 0
     
-    available = [i for i in range(9) if new_board[i]==0]
+    available = [i for i in range(9) if new_board[i]==blank]
     if maximizing:
         value = -999
         for position in available:
@@ -146,7 +147,7 @@ class TicTacToe(discord.ui.View):
     
     async def game_end(self):
         # displays winner and ends interaction
-        await self.message.channel.edit(embed=self.get_embed(), view=self)
+        await self.message.edit(embed=self.get_embed(), view=self)
         print('    ' + f'The winner was {self.winner}!')
         self.stop()
     
@@ -181,8 +182,9 @@ class TicTacToe(discord.ui.View):
         scores = [minimax(self.board, self.bot, self.player, i, 0, True) for i in available]
         bot_choice = available[scores.index(max(scores))]
         self.board = make_move(self.board, self.bot, bot_choice)
+        print('    ' + f'Scores: {[(available[i], scores[i]) for i in range(len(available))]}')
         print('    ' + f'DuckBot placed piece on {bot_choice}')
-        time.sleep(3)
+        time.sleep(1)
         self.disable_button(bot_choice)
         
         # check if bot won
@@ -193,3 +195,12 @@ class TicTacToe(discord.ui.View):
             self.winner = self.bot
             print('    ' + 'Winner detected, so calling game_end()')
             await self.game_end()
+
+board = [
+    blank, blank, blank,
+    blank, blank, blank,
+    blank, blank, blank
+]
+available = [i for i in range(9) if board[i]==blank]
+print([minimax(board, O, X, i, 0, True) for i in available])
+print(available)
