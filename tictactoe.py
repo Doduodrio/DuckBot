@@ -82,7 +82,9 @@ class TicTacToe(discord.ui.View):
             embed.description += self.board[i]
             if i%3==2:
                 embed.description += '\n'
-        if self.winner:
+        if self.winner == 'tie':
+            embed.add_field(name='', value='It was a tie!')
+        elif self.winner:
             embed.add_field(name='', value=f'{self.winner} was the winner!')
         else:
             embed.add_field(name='', value=text)
@@ -169,7 +171,7 @@ class TicTacToe(discord.ui.View):
             await self.message.edit(embed=self.get_embed('DuckBot is thinking...'), view=self)
             print('    ' + "It is now DuckBot's turn")
         else:
-            self.winner = self.player
+            self.winner = win(self.board)
             print('    ' + 'Winner detected, so calling game_end()')
             await self.game_end()
         
@@ -192,6 +194,6 @@ class TicTacToe(discord.ui.View):
             await self.message.edit(embed=self.get_embed("Player's turn"), view=self)
             print('    ' + "It is now Player's turn")
         else:
-            self.winner = self.bot
+            self.winner = win(self.board)
             print('    ' + 'Winner detected, so calling game_end()')
             await self.game_end()
