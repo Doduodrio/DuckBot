@@ -167,6 +167,7 @@ async def on_message(message):
   # %tictactoe: start a game of tic tac toe
   elif msg[0] in ['%tictactoe', '%ttt']:
     game = TicTacToe()
-    game.send(message)
+    await game.send(message)
+    print('\n' + 'DuckBot started a game of Tic Tac Toe')
 
 client.run(TOKEN)
