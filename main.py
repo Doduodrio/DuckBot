@@ -13,6 +13,7 @@ from items import get_item
 from conditions import get_condition
 from natures import get_nature
 from type_matchups import get_offensive_matchup, get_defensive_matchup
+from tictactoe import TicTacToe
 
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
@@ -162,5 +163,10 @@ async def on_message(message):
     except:
       await message.channel.send('error getting type data')
       print('    ' + ', '.join(types) + ', but there was an error')
+  
+  # %tictactoe: start a game of tic tac toe
+  elif msg[0] in ['%tictactoe', '%ttt']:
+    game = TicTacToe()
+    game.send()
 
 client.run(TOKEN)
