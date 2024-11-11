@@ -191,6 +191,8 @@ class TicTacToe(discord.ui.View):
         # displays winner and ends interaction
         await self.message.edit(embed=self.get_embed(), view=self)
         print('    ' + f'The winner was {self.winner}!')
+        for i in range(9):
+            self.disable_button(i)
         self.stop()
     
     async def player_move(self, player_choice):
