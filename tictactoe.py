@@ -141,28 +141,35 @@ class TicTacToe(discord.ui.View):
         for i in range(len(self.children)):
             if i==index:
                 self.children[i].disabled = True
+                print('    ' + f'Disabled button {i}')
                 return
     
     async def game_end(self):
         # displays winner and ends interaction
         await self.message.channel.edit(embed=self.get_embed(), view=self)
+        print('    ' + f'The winner was {self.winner}!')
         self.stop()
     
     async def update(self, player_choice):
+        print('    ' + 'Updating board...')
         available = [i for i in range(9) if self.board[i]==blank]
 
         # update board with player's move
         if player_choice in available:
             self.board = make_move(self.board, self.player, player_choice)
             self.disable_button(player_choice)
+            print('    ' + f'Player placed piece on {player_choice}')
         else:
             await self.message.channel.send('Spot already taken. Please pick again.', ephemeral=True)
+            print('    ' + f'Player could not place piece on {player_choice} because it was already taken')
         
         # check if player won
         if win(self.board) is None:
-            await self.message.edit(embed=self.get_embed('Bot is thinking...'), view=self)
+            await self.message.edit(embed=self.get_embed('DuckBot is thinking...'), view=self)
+            print('    ' + "It is now DuckBot's turn")
         else:
             self.winner = self.player
+            print('    ' + 'Winner detected, so calling game_end()')
             await self.game_end()
 
         # generate and update board with bot's move
@@ -171,10 +178,13 @@ class TicTacToe(discord.ui.View):
         self.board = make_move(self.board, self.bot, bot_choice)
         # time.sleep(2)
         self.disable_button(bot_choice)
+        print('    ' + f'DuckBot placed piece on {bot_choice}')
         
         # check if bot won
         if win(self.board) is None:
             await self.message.edit(embed=self.get_embed("Player's turn"), view=self)
+            print('    ' + "It is now Player's turn")
         else:
             self.winner = self.bot
+            print('    ' + 'Winner detected, so calling game_end()')
             await self.game_end()
