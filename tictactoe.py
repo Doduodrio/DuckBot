@@ -22,14 +22,14 @@ class TicTacToe(discord.ui.View):
     @discord.ui.button(style = discord.ButtonStyle.primary, label = '<')
     async def left_button(self, i: discord.Interaction, b: discord.ui.Button):
         global page
-        i.response.defer()
+        await i.response.defer()
         page -= 1
         await self.update()
     
     @discord.ui.button(style = discord.ButtonStyle.primary, label = '>')
     async def right_button(self, i: discord.Interaction, b: discord.ui.Button):
         global page
-        i.response.defer()
+        await i.response.defer()
         page += 1
         await self.update()
     
