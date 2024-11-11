@@ -160,7 +160,7 @@ class TicTacToe(discord.ui.View):
             print('    ' + f'Player placed piece on {player_choice}')
             self.disable_button(player_choice)
         else:
-            await self.message.channel.send('Spot already taken. Please pick again.', ephemeral=True)
+            await self.message.channel.send('Spot already taken. Please pick again.', ephemeral=True) # should be impossible to occur, but just in case
             print('    ' + f'Player could not place piece on {player_choice} because it was already taken')
         
         # check if player won
@@ -172,15 +172,17 @@ class TicTacToe(discord.ui.View):
             print('    ' + 'Winner detected, so calling game_end()')
             await self.game_end()
         
-        if self.winner: # does not keep going if player won (impossible, but still)
+        if self.winner: # does not keep going if player won (should also be impossible, but just in case)
             return
-
+        
+        available = [i for i in range(9) if self.board[i]==blank]
+        
         # generate and update board with bot's move
         scores = [minimax(self.board, self.bot, self.player, i, 0, True) for i in available]
         bot_choice = available[scores.index(max(scores))]
         self.board = make_move(self.board, self.bot, bot_choice)
         print('    ' + f'DuckBot placed piece on {bot_choice}')
-        # time.sleep(2)
+        time.sleep(3)
         self.disable_button(bot_choice)
         
         # check if bot won
