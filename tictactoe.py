@@ -195,12 +195,3 @@ class TicTacToe(discord.ui.View):
             self.winner = self.bot
             print('    ' + 'Winner detected, so calling game_end()')
             await self.game_end()
-
-board = [
-    blank, blank, blank,
-    blank, blank, blank,
-    blank, blank, blank
-]
-available = [i for i in range(9) if board[i]==blank]
-print([minimax(board, O, X, i, 0, True) for i in available])
-print(available)
