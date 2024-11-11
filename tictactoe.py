@@ -64,7 +64,8 @@ def minimax(board, a, b, target, depth, maximizing):
 
 class TicTacToe(discord.ui.View):
     def __init__(self):
-        self.board = [0 for i in range(9)]
+        super().__init__()
+        self.board = [blank for i in range(9)]
         self.player = X
         self.bot = O
         self.winner = None
@@ -77,9 +78,9 @@ class TicTacToe(discord.ui.View):
             timestamp = datetime.datetime.now()
         )
         for i in range(9):
-            self.description += self.board[i]
+            embed.description += self.board[i]
             if i%3==2:
-                self.description += '\n'
+                embed.description += '\n'
         if self.winner:
             embed.add_field(name='', value=f'{self.winner} was the winner!')
         else:
@@ -90,56 +91,56 @@ class TicTacToe(discord.ui.View):
     async def send(self, message: discord.Message): # note to future self: player starts by default, but add option to pick starting player later
         self.message = await message.channel.send(embed=self.get_embed("Player's turn"), view=self)
 
-    @discord.ui.button(style=discord.ButtonStyle.primary, row=0)
+    @discord.ui.button(style=discord.ButtonStyle.primary, label='A1', row=0)
     async def a1(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
         await self.update(0)
     
-    @discord.ui.button(style=discord.ButtonStyle.primary, row=0)
+    @discord.ui.button(style=discord.ButtonStyle.primary, label='A2', row=0)
     async def a2(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
         await self.update(1)
     
-    @discord.ui.button(style=discord.ButtonStyle.primary, row=0)
+    @discord.ui.button(style=discord.ButtonStyle.primary, label='A3', row=0)
     async def a3(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
         await self.update(2)
     
-    @discord.ui.button(style=discord.ButtonStyle.primary, row=1)
+    @discord.ui.button(style=discord.ButtonStyle.primary, label='B1', row=1)
     async def b1(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
         await self.update(3)
     
-    @discord.ui.button(style=discord.ButtonStyle.primary, row=1)
+    @discord.ui.button(style=discord.ButtonStyle.primary, label='B2', row=1)
     async def b2(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
         await self.update(4)
     
-    @discord.ui.button(style=discord.ButtonStyle.primary, row=1)
+    @discord.ui.button(style=discord.ButtonStyle.primary, label='B3', row=1)
     async def b3(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
         await self.update(5)
     
-    @discord.ui.button(style=discord.ButtonStyle.primary, row=2)
+    @discord.ui.button(style=discord.ButtonStyle.primary, label='C1', row=2)
     async def c1(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
         await self.update(6)
     
-    @discord.ui.button(style=discord.ButtonStyle.primary, row=2)
+    @discord.ui.button(style=discord.ButtonStyle.primary, label='C2', row=2)
     async def c2(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
         await self.update(7)
     
-    @discord.ui.button(style=discord.ButtonStyle.primary, row=2)
+    @discord.ui.button(style=discord.ButtonStyle.primary, label='C3', row=2)
     async def c3(self, i: discord.Interaction, b: discord.ui.Button):
         await i.response.defer()
         await self.update(8)
     
     def disable_button(self, index):
         # disables the specified button
-        for i in len(self.children):
+        for i in range(len(self.children)):
             if i==index:
-                i.disabled = True
+                self.children[i].disabled = True
                 return
     
     async def game_end(self):
