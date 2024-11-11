@@ -144,7 +144,7 @@ class TicTacToe(discord.ui.View):
         for i in range(len(self.children)):
             if i==index:
                 self.children[i].disabled = True
-                print('    ' + f'Disabled button {i}')
+                print('        ' + f'Disabled button {i}')
                 return
     
     async def game_end(self):
@@ -160,11 +160,11 @@ class TicTacToe(discord.ui.View):
         # update board with player's move
         if player_choice in available:
             self.board = make_move(self.board, self.player, player_choice)
-            print('    ' + f'Player placed piece on {player_choice}')
+            print('        ' + f'Player placed piece on {player_choice}')
             self.disable_button(player_choice)
         else:
             await self.message.channel.send('Spot already taken. Please pick again.', ephemeral=True) # should be impossible to occur, but just in case
-            print('    ' + f'Player could not place piece on {player_choice} because it was already taken')
+            print('        ' + f'Player could not place piece on {player_choice} because it was already taken')
         
         # check if player won
         if win(self.board) is None:
@@ -172,7 +172,7 @@ class TicTacToe(discord.ui.View):
             print('    ' + "It is now DuckBot's turn")
         else:
             self.winner = win(self.board)
-            print('    ' + 'Winner detected, so calling game_end()')
+            print('        ' + 'Winner detected, so calling game_end()')
             await self.game_end()
         
         if self.winner: # does not keep going if player won (should also be impossible, but just in case)
@@ -184,8 +184,8 @@ class TicTacToe(discord.ui.View):
         scores = [minimax(self.board, self.bot, self.player, i, 0, True) for i in available]
         bot_choice = available[scores.index(min(scores))] # pick branch that results in min score for player
         self.board = make_move(self.board, self.bot, bot_choice)
-        print('    ' + f'Scores: {[(available[i], scores[i]) for i in range(len(available))]}')
-        print('    ' + f'DuckBot placed piece on {bot_choice}')
+        print('        ' + f'Scores: {[(available[i], scores[i]) for i in range(len(available))]}')
+        print('        ' + f'DuckBot placed piece on {bot_choice}')
         time.sleep(1)
         self.disable_button(bot_choice)
         
@@ -195,5 +195,5 @@ class TicTacToe(discord.ui.View):
             print('    ' + "It is now Player's turn")
         else:
             self.winner = win(self.board)
-            print('    ' + 'Winner detected, so calling game_end()')
-            await self.game_end()
+            print('        ' + 'Winner detected, so calling game_end()')
+            await self.game_end()  
