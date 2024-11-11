@@ -2,6 +2,36 @@ import datetime
 import discord
 import time
 
+class GoFirst(discord.ui.View):
+    def __init__(self):
+        self.player_starts = None
+    
+    def get_embed(self):
+        return discord.Embed(
+            color = discord.Color.dark_teal(),
+            title = 'Tic Tac Toe',
+            description = 'Do you want to go first?',
+            timestamp = datetime.datetime.now()
+        )
+
+    async def send(self, message: discord.Message):
+        self.message = await message.channel.send(embed=self.get_embed(), view=self)
+    
+    @discord.ui.button(style=discord.ButtonStyle.primary, label='Yes')
+    async def yes(self, i: discord.Interaction, b: discord.ui.Button):
+        await i.response.defer()
+        self.player_starts = True
+        self.stop()
+    
+    @discord.ui.button(style=discord.ButtonStyle.primary, label='No')
+    async def no(self, i: discord.Interaction, b: discord.ui.Button):
+        await i.response.defer()
+        self.player_starts = False
+        self.stop()
+
+
+# actual game code below
+
 X = ':regional_indicator_x:' # note to future self: or whatever the code is for discord emojis
 O = ':o2:'
 blank = ':black_large_square:'
@@ -64,11 +94,12 @@ def minimax(board, a, b, target, depth, maximizing):
         return value
 
 class TicTacToe(discord.ui.View):
-    def __init__(self):
+    def __init__(self, player_starts):
         super().__init__()
         self.board = [blank for i in range(9)]
-        self.player = X
-        self.bot = O
+        self.player_starts = player_starts
+        self.player = X if player_starts else O
+        self.bot = O if player_starts else X
         self.winner = None
 
     def get_embed(self, text=''):
@@ -91,8 +122,10 @@ class TicTacToe(discord.ui.View):
 
         return embed
 
-    async def send(self, message: discord.Message): # note to future self: player starts by default, but add option to pick starting player later
-        self.message = await message.channel.send(embed=self.get_embed("Player's turn"), view=self)
+    async def make_board(self, message: discord.Message):
+        self.message = await message.channel.edit(embed=self.get_embed("Player's turn"), view=self)
+        if not self.player_starts:
+            await self.bot_move()
 
     @discord.ui.button(style=discord.ButtonStyle.primary, label='A1', row=0)
     async def a1(self, i: discord.Interaction, b: discord.ui.Button):
@@ -153,8 +186,7 @@ class TicTacToe(discord.ui.View):
         print('    ' + f'The winner was {self.winner}!')
         self.stop()
     
-    async def update(self, player_choice):
-        print('    ' + 'Updating board...')
+    async def player_move(self, player_choice):
         available = [i for i in range(9) if self.board[i]==blank]
 
         # update board with player's move
@@ -174,12 +206,10 @@ class TicTacToe(discord.ui.View):
             self.winner = win(self.board)
             print('        ' + 'Winner detected, so calling game_end()')
             await self.game_end()
-        
-        if self.winner: # does not keep going if player won (should also be impossible, but just in case)
-            return
-        
+    
+    async def bot_move(self):
         available = [i for i in range(9) if self.board[i]==blank]
-        
+
         # generate and update board with bot's move
         scores = [minimax(self.board, self.bot, self.player, i, 0, True) for i in available]
         bot_choice = available[scores.index(min(scores))] # pick branch that results in min score for player
@@ -197,3 +227,13 @@ class TicTacToe(discord.ui.View):
             self.winner = win(self.board)
             print('        ' + 'Winner detected, so calling game_end()')
             await self.game_end()  
+    
+    async def update(self, player_choice):
+        print('    ' + 'Updating board...')
+
+        await self.player_move(player_choice)
+        
+        if self.winner: # does not keep going if player won (should be impossible, but just in case)
+            return
+        
+        await self.bot_move()
