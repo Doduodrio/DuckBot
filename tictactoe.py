@@ -26,8 +26,8 @@ def win(b):
         (0, 4, 8), (2, 4, 6) # diagonals
     ]
     for i in win_states:
-        if b[i[0]]!=0 and b[i[0]]==b[i[1]] and b[i[1]]==b[i[2]]:
-            return list[i[0]]
+        if b[i[0]]!=blank and b[i[0]]==b[i[1]] and b[i[1]]==b[i[2]]:
+            return b[i[0]]
     return
 
 def minimax(board, a, b, target, depth, maximizing):
@@ -157,8 +157,8 @@ class TicTacToe(discord.ui.View):
         # update board with player's move
         if player_choice in available:
             self.board = make_move(self.board, self.player, player_choice)
-            self.disable_button(player_choice)
             print('    ' + f'Player placed piece on {player_choice}')
+            self.disable_button(player_choice)
         else:
             await self.message.channel.send('Spot already taken. Please pick again.', ephemeral=True)
             print('    ' + f'Player could not place piece on {player_choice} because it was already taken')
@@ -171,14 +171,17 @@ class TicTacToe(discord.ui.View):
             self.winner = self.player
             print('    ' + 'Winner detected, so calling game_end()')
             await self.game_end()
+        
+        if self.winner: # does not keep going if player won (impossible, but still)
+            return
 
         # generate and update board with bot's move
         scores = [minimax(self.board, self.bot, self.player, i, 0, True) for i in available]
         bot_choice = available[scores.index(max(scores))]
         self.board = make_move(self.board, self.bot, bot_choice)
+        print('    ' + f'DuckBot placed piece on {bot_choice}')
         # time.sleep(2)
         self.disable_button(bot_choice)
-        print('    ' + f'DuckBot placed piece on {bot_choice}')
         
         # check if bot won
         if win(self.board) is None:
