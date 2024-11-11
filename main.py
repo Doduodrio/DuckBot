@@ -6,7 +6,7 @@ import discord
 
 from calc import evaluate
 from roll import roll
-from tictactoe import TicTacToe
+from tictactoe import GoFirst, TicTacToe
 
 # BBP (Battle-By-Post) is a Pokemon forum game played on smogon.com
 # For more information, visit: https://www.smogon.com/forums/threads/battle-by-post-player-handbook-generation-9.3708940/
@@ -171,8 +171,11 @@ async def on_message(message):
   
   # %tictactoe: start a game of tic tac toe
   elif msg[0] in ['%tictactoe', '%ttt']:
-    game = TicTacToe()
-    await game.send(message)
+    menu = GoFirst()
+    game_message = await menu.send(message)
+    await menu.wait()
+    game = TicTacToe(menu.player_starts)
+    game.make_board(game_message)
     print('\n' + 'DuckBot started a game of Tic Tac Toe')
 
 client.run(TOKEN)
