@@ -6,14 +6,19 @@ import discord
 
 from calc import evaluate
 from roll import roll
-from pokemon import get_pkmn
-from moves import get_move
-from abilities import get_ability
-from items import get_item
-from conditions import get_condition
-from natures import get_nature
-from type_matchups import get_offensive_matchup, get_defensive_matchup
 from tictactoe import TicTacToe
+
+# BBP (Battle-By-Post) is a Pokemon forum game played on smogon.com
+# For more information, visit: https://www.smogon.com/forums/threads/battle-by-post-player-handbook-generation-9.3708940/
+BBP = False
+if BBP:
+  from pokemon import get_pkmn
+  from moves import get_move
+  from abilities import get_ability
+  from items import get_item
+  from conditions import get_condition
+  from natures import get_nature
+  from type_matchups import get_offensive_matchup, get_defensive_matchup
 
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
@@ -86,7 +91,7 @@ async def on_message(message):
         print('    ' + 'invalid parameters')
   
   # %stats: get pokemon stats
-  elif msg[0] == '%stats':
+  elif BBP and msg[0] == '%stats':
     pkmn = ' '.join(msg[1::])
     print('\n' + 'DuckBot got stats of:')
     try:
@@ -97,7 +102,7 @@ async def on_message(message):
       print('    ' + pkmn + ', but there was an error')
   
   # %move: get move
-  elif msg[0] == '%move':
+  elif BBP and msg[0] == '%move':
     move = ' '.join(msg[1::])
     print('\n' + 'DuckBot got move data of:')
     try:
@@ -108,7 +113,7 @@ async def on_message(message):
       print('    ' + move + ', but there was an error')
   
   # %ability: get ability
-  elif msg[0] == '%ability':
+  elif BBP and msg[0] == '%ability':
     ability = ' '.join(msg[1::])
     print('\n' + 'DuckBot got ability data of:')
     try:
@@ -119,7 +124,7 @@ async def on_message(message):
       print('    ' + ability + ', but there was an error')
   
   # %item: get item
-  elif msg[0] == '%item':
+  elif BBP and msg[0] == '%item':
     item = ' '.join(msg[1::])
     print('\n' + 'DuckBot got item data of:')
     try:
@@ -130,7 +135,7 @@ async def on_message(message):
       print('    ' + item + ', but there was an error')
   
   # %condition: get condition
-  elif msg[0] == '%condition':
+  elif BBP and msg[0] == '%condition':
     condition = ' '.join(msg[1::])
     print('\n' + 'DuckBot got condition data of:')
     try:
@@ -141,7 +146,7 @@ async def on_message(message):
       print('    ' + condition + ', but there was an error')
   
   # %nature: get nature
-  elif msg[0] == '%nature':
+  elif BBP and msg[0] == '%nature':
     nature = ' '.join(msg[1::])
     print('\n' + 'DuckBot got nature data of:')
     try:
@@ -152,7 +157,7 @@ async def on_message(message):
       print('    ' + nature + ', but there was an error')
   
   # %type: get type matchup of a list of types
-  elif msg[0] in ['%type', '%types']:
+  elif BBP and msg[0] in ['%type', '%types']:
     types = ' '.join(msg[1::])
     print('\n' + 'DuckBot got type data of:')
     try:
