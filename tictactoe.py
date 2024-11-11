@@ -15,7 +15,7 @@ def get_embed():
 
     return embed
 
-class MyView(discord.ui.View):
+class TicTacToe(discord.ui.View):
     async def send(self, message: discord.Message):
         self.message = await message.channel.send(embed=get_embed(), view=self)
 
