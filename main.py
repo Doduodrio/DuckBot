@@ -27,8 +27,9 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 client = discord.Client(
+    activity=discord.Game(name='Pokémon Gold'),
     intents=intents
-    )
+)
 
 @client.event
 async def on_ready():
