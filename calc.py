@@ -167,5 +167,3 @@ def evaluate(expression: str):
             return # mismatched parentheses error
 
     return stack[0] if stack else None
-
-print(evaluate('('))
