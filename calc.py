@@ -1,7 +1,7 @@
 import math
 
 operators = {"^": 4, "*": 3, "/": 3, "%": 3, "+": 2, "-": 2}
-functions = ["ceil", "floor", "abs", "factorial", "round", "sqrt", "log", "ln", "sin", "cos", "tan", "arcsin", "arccos", "arctan"]
+functions = ["ceil", "floor", "abs", "factorial", "round", "sqrt", "log", "ln", "sin", "cos", "tan", "arcsin", "asin", "arccos", "acos", "arctan", "atan"]
 
 def is_number(string):
     try:
@@ -136,7 +136,7 @@ def evaluate(expression: str):
             elif op == "abs":
                 stack.append(abs(a))
             elif op == "factorial":
-                stack.append(math.factorial(a))
+                stack.append(math.factorial(int(a)))
             elif op == "round":
                 if a%1<0.5:
                     stack.append(math.floor(a))
