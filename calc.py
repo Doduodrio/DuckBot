@@ -23,7 +23,7 @@ def is_function(string):
     return string in functions
 
 def is_greater(a, b):
-    # compares the precedence of the two operators
+    # compares the precedence of two operators
     return operators[a] > operators[b]
 
 def top_of(stack):
@@ -65,9 +65,10 @@ def shunt_yard(expression: str):
         j+=1
     
     # substitute special mathematical constants
-    for i in range(len(tokens)-1):
-        if tokens[i+1] == "(":
-            continue
+    for i in range(len(tokens)):
+        if i<len(tokens)-1:
+            if tokens[i+1] == "(":
+                continue
         if tokens[i] == "pi":
             tokens[i] = math.pi
         elif tokens[i] == "e":
@@ -75,20 +76,20 @@ def shunt_yard(expression: str):
         elif tokens[i] == "tau":
             tokens[i] = math.tau
         # purposely excluding math.inf and math.nan
-
+    
     for token in tokens:
         if is_number(token):
             output.append(float(token))
         elif is_function(token):
             stack.append(token)
         elif is_operator(token):
-            while not (top_of(stack) == None or top_of(stack) in "()") and is_greater(top_of(stack), token):
+            while not (top_of(stack) is None or top_of(stack) in "()") and is_greater(top_of(stack), token):
                 output.append(stack.pop())
             stack.append(token)
         elif token == "(":
             stack.append(token)
         elif token == ")":
-            while not (top_of(stack) == None or top_of(stack) == "("):
+            while not (top_of(stack) is None or top_of(stack) == "("):
                 output.append(stack.pop())
             stack.pop()
         else:
@@ -161,3 +162,5 @@ def evaluate(expression: str):
                 stack.append(math.atan(a))
 
     return stack[0] if stack else None
+
+print(shunt_yard('10+pi'))
