@@ -136,7 +136,10 @@ def evaluate(expression: str):
             elif op == "abs":
                 stack.append(abs(a))
             elif op == "factorial":
-                stack.append(math.factorial(int(a)))
+                if int(a)==a:
+                    stack.append(math.factorial(int(a)))
+                else:
+                    return
             elif op == "round":
                 if a%1<0.5:
                     stack.append(math.floor(a))
