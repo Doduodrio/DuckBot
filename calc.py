@@ -160,5 +160,7 @@ def evaluate(expression: str):
                 stack.append(math.acos(a))
             elif op in ["arctan", "atan"]:
                 stack.append(math.atan(a))
+            else:
+                return # mismatched parentheses error
 
     return stack[0] if stack else None
