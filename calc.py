@@ -21,25 +21,33 @@ def shunt_yard(expression: str):
     # Convert an expression into reverse Polish notation
     # with the shunting yard algorithm
 
-    input = []
+    tokens = []
     stack = []
     output = []
     
     # strip spaces and then convert to tokens
     for i in "".join(expression.split()):
-        if len(input)==0 and i in "0123456789.()^*/%+-":
-            input.append(i)
+        if len(tokens)==0 and i in "0123456789.()^*/%+-":
+            tokens.append(i)
         elif is_number(i) or i == ".":
-            if is_number(input[-1]) or input[-1] == ".":
-                input[-1] += i
+            if is_number(tokens[-1]) or tokens[-1] == ".":
+                tokens[-1] += i
             else:
-                input.append(i)
+                tokens.append(i)
         elif i in "()" or is_operator(i):
-            input.append(i)
+            tokens.append(i)
         else:
             return []
+    
+    # combine negative signs with numbers
+    i = 0
+    while i+1<len(tokens):
+        if tokens[i] == "-" and is_number(tokens[i+1]):
+            tokens[i] += tokens[i+1]
+            tokens.pop(i+1)
+        i+=1
 
-    for thing in input:
+    for thing in tokens:
         if is_number(thing):
             output.append(float(thing))
         elif is_operator(thing):
@@ -76,7 +84,7 @@ def evaluate(expression: str):
             elif opr == "/":
                 try:
                     stack.append(b / a)
-                except ZeroDivisionError:
+                except:
                     return
             elif opr == "%":
                 stack.append(b % a)
