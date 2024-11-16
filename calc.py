@@ -162,5 +162,3 @@ def evaluate(expression: str):
                 stack.append(math.atan(a))
 
     return stack[0] if stack else None
-
-print(shunt_yard('10+pi'))
