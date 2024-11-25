@@ -181,4 +181,8 @@ async def on_message(message):
         game = TicTacToe(menu.player_starts)
         await game.make_board(game_message)
 
+@client.event
+async def on_disconnect():
+  print('\n' + f'{now()} Connection failed.')
+
 client.run(TOKEN)
