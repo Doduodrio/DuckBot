@@ -2,6 +2,7 @@
 
 from dotenv import load_dotenv
 import os
+import datetime
 import discord
 
 from calc import evaluate
@@ -183,6 +184,6 @@ async def on_message(message):
 
 @client.event
 async def on_disconnect():
-  print('\n' + f'{now()} Connection failed.')
+  print('\n' + f'{datetime.datetime.now().isoformat(' ')} Connection failed.')
 
 client.run(TOKEN)
