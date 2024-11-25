@@ -184,6 +184,6 @@ async def on_message(message):
 
 @client.event
 async def on_disconnect():
-  print('\n' + f'{datetime.datetime.now().isoformat(' ')} Connection failed.')
+  print('\n' + f'{datetime.datetime.now().isoformat(" ")} Connection failed.')
 
 client.run(TOKEN)
