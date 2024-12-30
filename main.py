@@ -49,6 +49,10 @@ async def on_message(message):
     # otherwise, react
     msg = message.content.lower().split() # "hElLo!" => "hello!"
 
+    # don't continue if message is empty
+    if not msg:
+        return
+
     # %ping: reply with pong
     if msg[0] == '%ping':
         await message.channel.send('pong')
