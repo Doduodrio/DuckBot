@@ -45,11 +45,23 @@ aliases = {
     'wo-chien': 'wochien',
     'zygarde-10%': 'zygarde-10'
 }
+mega_aliases = {
+    'Charizard-Mega-X': 'Mega Charizard X',
+    'Charizard-Mega-Y': 'Mega Charizard Y',
+    'Mewtwo-Mega-X': 'Mega Mewtwo X',
+    'Mewtwo-Mega-Y': 'Mega Mewtwo Y',
+    'Kyogre-Primal': 'Primal Kyogre',
+    'Groudon-Primal': 'Primal Groudon',
+    'Necrozma-Ultra': 'Ultra Necrozma'
+}
 
 class Pokemon:
     def __init__(self, p):
         if p['ID'] in ['Mega', 'Primal', 'Ultra']:
-            self.name = f"{p['ID']} {p['Name']}"
+            if p['Name'].endswith('-Mega'):
+                self.name = f"Mega {p['Name'].replace('-Mega', '')}"
+            else:
+                self.name = mega_aliases[p['Name']]
         else:
             self.name = p['Name']
         self.typing = p['Typing']
@@ -65,11 +77,11 @@ class Pokemon:
         self.wc = p['Weight']
         self.sig = p['Signature Move or Moves']
         self.traits = p['Traits']
-        if p['Sprite Alias'] != '':
+        if p['Showdown Alias'] != '':
             try:
-                self.alias = aliases[p['Sprite Alias'].lower()]
+                self.alias = aliases[p['Showdown Alias'].lower()]
             except:
-                self.alias = p['Sprite Alias'].lower()
+                self.alias = p['Showdown Alias'].lower()
         else:
             try:
                 self.alias = aliases[p['Name'].lower()]
@@ -81,7 +93,10 @@ db = Database('https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9Lu
 # convert raw_content (list of dicts) to a dict of Pokemon
 for p in db.raw_content:
     if p['ID'] in ['Mega', 'Primal', 'Ultra']:
-        db.content[f"{p['ID'].lower()} {p['Name'].lower()}"] = Pokemon(p)
+        if p['Name'].endswith('-Mega'):
+            db.content[f"Mega {p['Name'].replace('-Mega', '')}".lower()] = Pokemon(p)
+        else:
+            db.content[mega_aliases[p['Name']].lower()] = Pokemon(p)
     else:
         db.content[p['Name'].lower()] = Pokemon(p)
 
