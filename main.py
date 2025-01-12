@@ -18,8 +18,10 @@ if BBP:
     from abilities import get_ability
     from items import get_item
     from conditions import get_condition
-    from natures import get_nature
-    from type_matchups import get_offensive_matchup, get_defensive_matchup
+
+from natures import get_nature
+from type_matchups import get_offensive_matchup, get_defensive_matchup
+from pokedex import get_entries_embed
 
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
@@ -185,6 +187,20 @@ async def on_message(message):
         await menu.wait()
         game = TicTacToe(menu.player_starts)
         await game.make_board(game_message)
+    
+    # %pokedex: get pokedex entries
+    elif msg[0] in ['%pokedex', '%dex']:
+        pkmn = ''
+        print('\n' + 'Duckbot got Pokedex entry of:')
+        try:
+            gen = int(msg[1])
+            pkmn = '_'.join([i.title() for i in msg[2::]])
+            await message.channel.send(embed=get_entries_embed(gen, pkmn))
+            print('    ' + pkmn)
+        except Exception as e:
+            await message.channel.send('error getting Pokedex entries')
+            print('    ' + pkmn + ', but there was an error')
+            print('    ' + f'Error: {e}')
 
 @client.event
 async def on_disconnect():
