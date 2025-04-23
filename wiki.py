@@ -15,4 +15,7 @@ def get_image(article_name):
     file = requests.get(f"https://en.wikipedia.org/wiki/{article_name}")
     html = BeautifulSoup(file.content, features="html.parser")
     images = html.find_all(name="img")
-    return "https" + images[3]['src']
+    if images[3].has_attr("src") and not images[3].has_attr("alt"):
+        return "https" + images[3]['src']
+    else:
+        return None
