@@ -10,3 +10,9 @@ def get_article(article_name):
     for i in range(len(text)):
         text[i] = ''.join(list(text[i].strings)).strip()
     return text[1]
+
+def get_image(article_name):
+    file = requests.get(f"https://en.wikipedia.org/wiki/{article_name}")
+    html = BeautifulSoup(file.content, features="html.parser")
+    images = html.find_all(name="img")
+    return "https" + images[3]['src']
