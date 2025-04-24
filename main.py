@@ -8,6 +8,7 @@ import discord
 from calc import evaluate
 from roll import roll
 from tictactoe import GoFirst, TicTacToe
+from wiki import get_article
 
 # BBP (Battle-By-Post) is a Pokemon forum game played on smogon.com
 # For more information, visit: https://www.smogon.com/forums/threads/battle-by-post-player-handbook-generation-9.3708940/
@@ -185,6 +186,17 @@ async def on_message(message):
         await menu.wait()
         game = TicTacToe(menu.player_starts)
         await game.make_board(game_message)
+    
+    # %wikipedia: fetch the selected wikipedia article
+    elif msg[0] in ['%wikipedia', '%wiki']:
+        article = ' '.join(msg[1::])
+        print('\n' + 'Duckbot fetched the Wikipedia article for:')
+        try:
+            await message.channel.send(embed=get_article(article))
+            print('    ' + article)
+        except Exception as e:
+            await message.channel.send('error getting article')
+            print('    ' + article + ', but there was an error' + e)
 
 @client.event
 async def on_disconnect():
